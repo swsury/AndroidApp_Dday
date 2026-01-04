@@ -18,15 +18,17 @@ object DateCalculator {
     fun calculateDDay(
         targetDate: String,
         excludeHolidays: Boolean = false,
-        selectedDays: List<String> = emptyList()
+        selectedDays: List<String> = emptyList(),
+        holidays: Set<String> = emptySet()
     ): String {
+
         val today = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 0)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }
-        
+
         val target = Calendar.getInstance().apply {
             time = dateFormat.parse(targetDate) ?: Date()
             set(Calendar.HOUR_OF_DAY, 0)
@@ -34,53 +36,57 @@ object DateCalculator {
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }
-        
-        // 일반 날짜 차이 계산
+
         val diffInMillis = target.timeInMillis - today.timeInMillis
         val totalDiff = TimeUnit.MILLISECONDS.toDays(diffInMillis).toInt()
-        
-        // 옵션이 없으면 기본 계산
+
+        // 옵션 없으면 기본 계산
         if (!excludeHolidays && selectedDays.isEmpty()) {
             return when {
                 totalDiff == 0 -> "D-Day"
                 totalDiff > 0 -> "D-$totalDiff"
-                else -> "D+${Math.abs(totalDiff)}"
+                else -> "D+${kotlin.math.abs(totalDiff)}"
             }
         }
-        
-        // 공휴일 제외 또는 특정 요일만 카운트
+
         var count = 0
         val current = today.clone() as Calendar
         val direction = if (totalDiff >= 0) 1 else -1
-        
-        while ((direction > 0 && current.before(target)) || 
-               (direction < 0 && current.after(target))) {
+
+        while (
+            (direction > 0 && current.before(target)) ||
+            (direction < 0 && current.after(target))
+        ) {
             current.add(Calendar.DAY_OF_MONTH, direction)
             val dayOfWeek = current.get(Calendar.DAY_OF_WEEK)
-            
-            // 특정 요일 선택이 있는 경우
+
+            // 1️⃣ 요일 선택 (최우선)
             if (selectedDays.isNotEmpty()) {
                 val dayName = getDayName(dayOfWeek)
                 if (dayName in selectedDays) {
                     count++
                 }
             }
-            // 공휴일(주말) 제외
+            // 2️⃣ 공휴일 제외 (주말 포함)
             else if (excludeHolidays) {
-                // 주말 제외 (일요일=1, 토요일=7)
-                if (dayOfWeek != Calendar.SUNDAY && dayOfWeek != Calendar.SATURDAY) {
+                if (!isPublicHoliday(current, holidays)) {
                     count++
                 }
             }
+            // 3️⃣ 기본
+            else {
+                count++
+            }
         }
-        
+
         return when {
             count == 0 && totalDiff == 0 -> "D-Day"
             totalDiff >= 0 -> "D-$count"
             else -> "D+$count"
         }
     }
-    
+
+
     /**
      * 날짜 포맷팅 (yyyy. MM. dd.)
      */
@@ -128,7 +134,23 @@ object DateCalculator {
             else -> ""
         }
     }
-    
+
+    /**
+     * 공휴일 가져오기
+     */
+    private fun isPublicHoliday(
+        calendar: Calendar,
+        holidays: Set<String>
+    ): Boolean {
+        val year = calendar.get(Calendar.YEAR)
+        val month = String.format("%02d", calendar.get(Calendar.MONTH) + 1)
+        val day = String.format("%02d", calendar.get(Calendar.DAY_OF_MONTH))
+        val date = "$year-$month-$day"
+
+        return date in holidays
+    }
+
+
     /**
      * 오늘 날짜를 yyyy-MM-dd 형식으로 반환
      */

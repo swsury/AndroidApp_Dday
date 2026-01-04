@@ -24,6 +24,8 @@ import androidx.compose.ui.window.Dialog
 import com.example.ddayapp.data.DDay
 import com.example.ddayapp.ui.theme.toComposeColor
 import com.example.ddayapp.utils.DateCalculator
+import java.util.Calendar
+import androidx.compose.foundation.horizontalScroll
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,35 +40,32 @@ fun AddEditDialog(
     var selectedColor by remember { mutableStateOf(dday?.color ?: "#24a19c") }
     var excludeHolidays by remember { mutableStateOf(dday?.excludeHolidays ?: false) }
     var selectedDays by remember { mutableStateOf(dday?.selectedDays ?: emptyList()) }
-    
+
+    /* 📅 DatePicker 상태 */
+    var showDatePicker by remember { mutableStateOf(false) }
+    val datePickerState = rememberDatePickerState()
+
     val colors = listOf(
-        "#24a19c",
-        "#218efd",
-        "#ff6b6b",
-        "#a855f7",
-        "#f59e0b",
-        "#10b981"
+        "#24a19c", "#218efd", "#ff6b6b",
+        "#a855f7", "#f59e0b", "#10b981"
     )
-    
+
     val weekDays = listOf("월", "화", "수", "목", "금", "토", "일")
-    
+
     Dialog(onDismissRequest = onDismiss) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            )
+            shape = RoundedCornerShape(16.dp)
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(24.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                // 헤더
+
+                /* ===== 헤더 ===== */
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -77,176 +76,168 @@ fun AddEditDialog(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
                     IconButton(onClick = onDismiss) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "닫기",
-                            tint = Color.Gray
-                        )
+                        Icon(Icons.Default.Close, contentDescription = null)
                     }
                 }
-                
-                Spacer(modifier = Modifier.height(24.dp))
-                
-                // 라벨
-                Text(
-                    text = "라벨",
-                    fontSize = 14.sp,
-                    color = Color(0xFF666666),
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
+
+                Spacer(Modifier.height(24.dp))
+
+                /* ===== 라벨 ===== */
+                Text("라벨", fontSize = 14.sp, color = Color(0xFF666666))
+                Spacer(Modifier.height(8.dp))
                 OutlinedTextField(
                     value = labelTitle,
                     onValueChange = { labelTitle = it },
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = { Text("라벨을 입력하세요") },
-                    singleLine = true,
-                    shape = RoundedCornerShape(8.dp)
+                    singleLine = true
                 )
-                
-                Spacer(modifier = Modifier.height(16.dp))
-                
-                // 제목
-                Text(
-                    text = "제목",
-                    fontSize = 14.sp,
-                    color = Color(0xFF666666),
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
+
+                Spacer(Modifier.height(16.dp))
+
+                /* ===== 제목 ===== */
+                Text("제목", fontSize = 14.sp, color = Color(0xFF666666))
+                Spacer(Modifier.height(8.dp))
                 OutlinedTextField(
                     value = title,
                     onValueChange = { title = it },
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = { Text("제목을 입력하세요") },
-                    singleLine = true,
-                    shape = RoundedCornerShape(8.dp)
+                    singleLine = true
                 )
-                
-                Spacer(modifier = Modifier.height(16.dp))
-                
-                // 날짜
-                Text(
-                    text = "날짜",
-                    fontSize = 14.sp,
-                    color = Color(0xFF666666),
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
+
+                Spacer(Modifier.height(16.dp))
+
+                /* ===== 날짜 (달력 표시) ===== */
+                Text("날짜", fontSize = 14.sp, color = Color(0xFF666666))
+                Spacer(Modifier.height(8.dp))
                 OutlinedTextField(
                     value = date,
-                    onValueChange = { date = it },
-                    modifier = Modifier.fillMaxWidth(),
+                    onValueChange = {},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { showDatePicker = true },
+                    enabled = false,
                     placeholder = { Text("yyyy-MM-dd") },
-                    singleLine = true,
-                    shape = RoundedCornerShape(8.dp)
+                    singleLine = true
                 )
-                
-                Spacer(modifier = Modifier.height(16.dp))
-                
-                // 공휴일 제외
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.clickable {
-                        excludeHolidays = !excludeHolidays
-                        if (excludeHolidays) {
-                            selectedDays = emptyList()
-                        }
-                    }
-                ) {
-                    Checkbox(
-                        checked = excludeHolidays,
-                        onCheckedChange = { 
-                            excludeHolidays = it
-                            if (it) {
-                                selectedDays = emptyList()
+
+                /* 📅 달력 */
+                if (showDatePicker) {
+                    DatePickerDialog(
+                        onDismissRequest = { showDatePicker = false },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                datePickerState.selectedDateMillis?.let { millis ->
+                                    val cal = Calendar.getInstance().apply {
+                                        timeInMillis = millis
+                                    }
+                                    date = String.format(
+                                        "%04d-%02d-%02d",
+                                        cal.get(Calendar.YEAR),
+                                        cal.get(Calendar.MONTH) + 1,
+                                        cal.get(Calendar.DAY_OF_MONTH)
+                                    )
+                                }
+                                showDatePicker = false
+                            }) {
+                                Text("확인")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { showDatePicker = false }) {
+                                Text("취소")
                             }
                         }
+                    ) {
+                        DatePicker(state = datePickerState)
+                    }
+                }
+
+                Spacer(Modifier.height(16.dp))
+
+                /* ---------- 공휴일 제외 ---------- */
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        checked = excludeHolidays,
+                        onCheckedChange = { excludeHolidays = it }
                     )
                     Text(
-                        text = "공휴일 제외 (주말 제외)",
+                        text = "공휴일 제외 (주말 포함)",
                         fontSize = 14.sp,
                         color = Color(0xFF666666)
                     )
                 }
-                
-                Spacer(modifier = Modifier.height(16.dp))
-                
-                // 요일 선택
-                Text(
-                    text = "요일 선택",
-                    fontSize = 14.sp,
-                    color = Color(0xFF666666),
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                
+
+                Spacer(Modifier.height(16.dp))
+
+                /* ===== 요일 선택 (가로 스크롤) ===== */
+                Text("요일 선택", fontSize = 14.sp, color = Color(0xFF666666))
+                Spacer(Modifier.height(8.dp))
+
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     weekDays.forEach { day ->
                         val isSelected = day in selectedDays
-                        val isEnabled = !excludeHolidays
-                        
+
                         Button(
                             onClick = {
-                                if (isEnabled) {
-                                    selectedDays = if (isSelected) {
-                                        selectedDays - day
-                                    } else {
-                                        selectedDays + day
-                                    }
+                                selectedDays = if (isSelected) {
+                                    selectedDays - day
+                                } else {
+                                    selectedDays + day
                                 }
                             },
                             modifier = Modifier.weight(1f),
+                            enabled = true,
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = when {
-                                    !isEnabled -> Color(0xFFE0E0E0)
                                     isSelected -> "#24a19c".toComposeColor()
                                     else -> Color(0xFFF5F5F5)
                                 },
                                 contentColor = when {
-                                    !isEnabled -> Color(0xFFBDBDBD)
                                     isSelected -> Color.White
                                     else -> Color(0xFF666666)
                                 }
                             ),
-                            enabled = isEnabled,
                             shape = RoundedCornerShape(8.dp),
-                            contentPadding = PaddingValues(vertical = 8.dp, horizontal = 4.dp)
-                        ) {
-                            Text(
-                                text = day,
-                                fontSize = 12.sp
+                            contentPadding = PaddingValues(
+                                horizontal = 6.dp,
+                                vertical = 6.dp
                             )
+                        ) {
+                            Text(day, fontSize = 10.sp)
                         }
                     }
                 }
-                
+
                 Text(
                     text = when {
-                        excludeHolidays -> "공휴일 제외 옵션이 선택되어 있습니다"
-                        selectedDays.isNotEmpty() -> "선택된 요일만 카운트됩니다 (${selectedDays.joinToString(", ")})"
-                        else -> "선택 안 함 시 모든 날짜를 포함합니다"
+                        selectedDays.isNotEmpty() && excludeHolidays ->
+                            "선택한 요일만 카운트하며 공휴일은 제외됩니다"
+                        selectedDays.isNotEmpty() ->
+                            "선택된 요일만 카운트됩니다 (${selectedDays.joinToString(", ")})"
+                        excludeHolidays ->
+                            "공휴일을 제외하고 카운트합니다"
+                        else ->
+                            "모든 날짜를 포함합니다"
                     },
                     fontSize = 12.sp,
                     color = Color(0xFF999999),
                     modifier = Modifier.padding(top = 8.dp)
                 )
-                
-                Spacer(modifier = Modifier.height(16.dp))
-                
-                // 색상 선택
-                Text(
-                    text = "색상",
-                    fontSize = 14.sp,
-                    color = Color(0xFF666666),
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
+
+                Spacer(Modifier.height(16.dp))
+
+                /* ===== 색상 ===== */
+                Text("색상", fontSize = 14.sp, color = Color(0xFF666666))
+                Spacer(Modifier.height(8.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     colors.forEach { color ->
                         Box(
                             modifier = Modifier
@@ -255,48 +246,46 @@ fun AddEditDialog(
                                 .background(color.toComposeColor())
                                 .border(
                                     width = if (color == selectedColor) 2.dp else 0.dp,
-                                    color = Color(0xFF1B1C1F),
+                                    color = Color.Black,
                                     shape = CircleShape
                                 )
                                 .clickable { selectedColor = color }
                         )
                     }
                 }
-                
-                Spacer(modifier = Modifier.height(24.dp))
-                
-                // 저장 버튼
+
+                Spacer(Modifier.height(24.dp))
+
+                /* ===== 저장 ===== */
                 Button(
                     onClick = {
-                        if (labelTitle.isNotBlank() && title.isNotBlank() && date.isNotBlank()) {
-                            val newDDay = DDay(
+                        onSave(
+                            DDay(
                                 id = dday?.id ?: "",
                                 labelTitle = labelTitle,
                                 title = title,
                                 date = date,
                                 color = selectedColor,
                                 excludeHolidays = excludeHolidays,
-                                selectedDays = if (selectedDays.isNotEmpty()) selectedDays else emptyList()
+                                selectedDays = selectedDays
                             )
-                            onSave(newDDay)
-                        }
+                        )
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = selectedColor.toComposeColor()
-                    ),
-                    shape = RoundedCornerShape(8.dp)
+                    )
                 ) {
                     Text(
                         text = if (dday == null) "추가" else "수정",
                         color = Color.White,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium
+                        fontSize = 16.sp
                     )
                 }
             }
         }
     }
 }
+

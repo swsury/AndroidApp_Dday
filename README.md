@@ -10,7 +10,7 @@
 - 라벨 및 제목 설정
 
 ### ✅ 날짜 계산 옵션
-- 공휴일 제외 (주말 제외)
+- 공휴일 제외 (주말 포함) : 공휴일과 주말 계산 분리
 - 특정 요일만 카운트
 - 일반 날짜 계산
 
@@ -67,6 +67,7 @@ app/src/main/java/com/example/ddayapp/
 │   └── PreferencesHelper.kt    # 데이터 저장
 └── viewmodel/
     └── DdayViewModel.kt        # ViewModel
+
 ```
 
 ---

@@ -1,13 +1,16 @@
 package com.example.ddayapp.data
 
-import java.util.UUID
-
 data class DDay(
-    val id: String = UUID.randomUUID().toString(),
-    val labelTitle: String,
+    val id: Long,
     val title: String,
-    val date: String, // Format: "yyyy-MM-dd"
-    val color: String, // Hex color code
-    val excludeHolidays: Boolean = false,
-    val selectedDays: List<String> = emptyList() // ["월", "화", ...]
+    val labelTitle: String,
+    val date: String,               // yyyy-MM-dd
+    val color: String,
+
+    // 🔥 D-day 계산 옵션
+    val excludePublicHolidays: Boolean,
+    val excludeWeekends: Boolean,
+
+    // 공휴일 목록 (yyyy-MM-dd)
+    val holidays: Set<String> = emptySet()
 )

@@ -61,12 +61,10 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
     /**
      * D-day 삭제
      */
-    fun deleteDDay(id: String) {
-        val updatedList = _ddays.value.filter { it.id != id }
-        _ddays.value = updatedList
-        prefsHelper.saveDDays(updatedList)
+    fun deleteDDay(id: Long) {
+        _ddays.value = _ddays.value.filterNot { it.id == id }
     }
-    
+
     /**
      * 설정 업데이트
      */

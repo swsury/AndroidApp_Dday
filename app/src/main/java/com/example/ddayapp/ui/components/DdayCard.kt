@@ -26,12 +26,14 @@ fun DdayCard(
     modifier: Modifier = Modifier
 ) {
     var showMenu by remember { mutableStateOf(false) }
+
     val cardColor = dday.color.toComposeColor()
 
     val ddayText = DateCalculator.calculateDDay(
-        targetDate = dday.date,
-        excludeHolidays = dday.excludeHolidays,
-        selectedDays = dday.selectedDays
+        targetDate = dday. date,
+        excludePublicHolidays = dday.excludePublicHolidays,
+        excludeWeekends = dday.excludeWeekends,
+        holidays = dday.holidays
     )
 
     val formattedDate = DateCalculator.formatDate(dday.date)
@@ -42,21 +44,15 @@ fun DdayCard(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-
-            /* ───── 상단 컬러 바 ───── */
+        Column {
+            /* 상단 컬러 바 */
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(36.dp)
                     .background(
-                        color = cardColor,
-                        shape = RoundedCornerShape(
-                            topStart = 8.dp,
-                            topEnd = 8.dp
-                        )
+                        cardColor,
+                        RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
                     )
             ) {
                 Row(
@@ -96,12 +92,7 @@ fun DdayCard(
                                 }
                             )
                             DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        "삭제",
-                                        color = Color.Red
-                                    )
-                                },
+                                text = { Text("삭제", color = Color.Red) },
                                 onClick = {
                                     showMenu = false
                                     onDelete()
@@ -112,14 +103,11 @@ fun DdayCard(
                 }
             }
 
-            /* ───── 카드 내용 ───── */
+            /* 카드 내용 */
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+                modifier = Modifier.padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -128,9 +116,7 @@ fun DdayCard(
                     Text(
                         text = dday.title,
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = Color(0xFF1B1C1F),
-                        maxLines = 1
+                        fontWeight = FontWeight.Normal
                     )
 
                     Text(
@@ -141,10 +127,7 @@ fun DdayCard(
                     )
                 }
 
-                Divider(
-                    color = Color(0xFFE0E5ED),
-                    thickness = 0.5.dp
-                )
+                Divider(thickness = 0.5.dp)
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -156,7 +139,6 @@ fun DdayCard(
                         tint = cardColor,
                         modifier = Modifier.size(14.dp)
                     )
-
                     Text(
                         text = formattedDate,
                         fontSize = 12.sp,

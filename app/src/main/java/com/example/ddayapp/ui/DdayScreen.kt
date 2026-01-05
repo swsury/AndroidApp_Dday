@@ -168,6 +168,7 @@ fun DdayScreen(
     if (showAddDialog) {
         AddEditDialog(
             dday = editingDday,
+            holidays = settings.holidays.map { it.date }.toSet(),  // ✅ 공휴일 전달
             onDismiss = {
                 showAddDialog = false
                 editingDday = null

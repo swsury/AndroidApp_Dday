@@ -205,7 +205,7 @@ fun SettingsDialog(
                     ) {
                         OutlinedTextField(
                             value = newHolidayDate,
-                            onValueChange = { },
+                            onValueChange = { _: String -> },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable { showDatePicker = true },

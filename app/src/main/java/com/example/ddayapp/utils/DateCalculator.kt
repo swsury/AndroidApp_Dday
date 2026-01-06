@@ -1,8 +1,7 @@
 package com.example.ddayapp. utils
 
 import java.text.SimpleDateFormat
-import java. util.*
-import java.util.concurrent.TimeUnit
+import java.util.*
 
 object DateCalculator {
 
@@ -25,17 +24,17 @@ object DateCalculator {
 
         val today = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
-            set(Calendar. SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
+            set(Calendar. MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar. MILLISECOND, 0)
         }
 
         val target = Calendar.getInstance().apply {
             time = dateFormat.parse(targetDate) ?: Date()
             set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
-            set(Calendar. SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
+            set(Calendar. MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar. MILLISECOND, 0)
         }
 
         // 오늘과 목표일이 같으면 D-Day
@@ -46,34 +45,38 @@ object DateCalculator {
         var count = 0
 
         // 날짜를 하나씩 이동하면서 카운트
-        while (
-            (direction > 0 && ! current.after(target)) ||
-            (direction < 0 && !current. before(target))
-        ) {
-            // 오늘은 제외하고 시작
-            if (! isSameDay(current, today)) {
-                val dayOfWeek = current.get(Calendar.DAY_OF_WEEK)
+        while (true) {
+            val dayOfWeek = current.get(Calendar.DAY_OF_WEEK)
+            val isWeekend = (dayOfWeek == Calendar. SATURDAY || dayOfWeek == Calendar.SUNDAY)
+            val isHoliday = isPublicHoliday(current, holidays)
 
-                // 주말 제외 옵션이 켜져있고, 토요일 또는 일요일이면 건너뛰기
-                val isWeekend = (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar. SUNDAY)
-                if (excludeWeekends && isWeekend) {
-                    current.add(Calendar.DAY_OF_MONTH, direction)
-                    continue
+            // 엑셀 로직 그대로 구현
+            val shouldCount = when {
+                // 주말 제외 AND 공휴일 제외
+                excludeWeekends && excludePublicHolidays -> {
+                    !isWeekend && !isHoliday  // 평일만 카운트
                 }
-
-                // 공휴일 제외 옵션이 켜져있고, 공휴일이면 건너뛰기
-                if (excludePublicHolidays && isPublicHoliday(current, holidays)) {
-                    current. add(Calendar.DAY_OF_MONTH, direction)
-                    continue
+                // 주말 포함 AND 공휴일 제외
+                ! excludeWeekends && excludePublicHolidays -> {
+                    ! isHoliday  // 공휴일만 제외
                 }
+                // 주말 제외 AND 공휴일 포함
+                excludeWeekends && ! excludePublicHolidays -> {
+                    ! isWeekend  // 주말만 제외
+                }
+                // 모두 포함
+                else -> true
+            }
 
+            if (shouldCount) {
                 count++
             }
 
+            // 다음 날짜로 이동
+            current.add(Calendar.DAY_OF_MONTH, direction)
+
             // 목표일에 도달했으면 종료
             if (isSameDay(current, target)) break
-
-            current.add(Calendar.DAY_OF_MONTH, direction)
         }
 
         return if (direction > 0) "D-$count" else "D+${Math.abs(count)}"
@@ -110,8 +113,8 @@ object DateCalculator {
         val cal = Calendar.getInstance()
         return String.format(
             "%04d-%02d-%02d",
-            cal.get(Calendar. YEAR),
-            cal.get(Calendar.MONTH) + 1,
+            cal. get(Calendar.YEAR),
+            cal.get(Calendar. MONTH) + 1,
             cal.get(Calendar.DAY_OF_MONTH)
         )
     }
@@ -123,7 +126,7 @@ object DateCalculator {
         return try {
             val parts = date.split("-")
             "${parts[0]}.${parts[1]}.${parts[2]}"
-        } catch (e:  Exception) {
+        } catch (e: Exception) {
             date
         }
     }

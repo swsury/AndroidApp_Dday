@@ -9,8 +9,10 @@ data class DDay(
 
     // 🔥 D-day 계산 옵션
     val excludePublicHolidays: Boolean,
+    val excludeCustomDays: Boolean,      // 🔥 안식일 제외 옵션 추가
     val excludeWeekends: Boolean,
 
     // 공휴일 목록 (yyyy-MM-dd)
-    val holidays: Set<String> = emptySet()
+    val publicHolidays: Set<String> = emptySet(),   // 🔥 공휴일
+    val customDays: Set<String> = emptySet()        // 🔥 안식일
 )

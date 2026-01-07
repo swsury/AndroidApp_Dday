@@ -16,10 +16,12 @@ object DateCalculator {
      * @return D-Day 문자열 (예: "D-30", "D-Day", "D+15")
      */
     fun calculateDDay(
-        targetDate:  String,
-        excludePublicHolidays: Boolean,
+        targetDate: String,
+        excludePublicHolidays:  Boolean,
+        excludeCustomDays:  Boolean,      // 🔥 안식일 제외 옵션
         excludeWeekends:  Boolean,
-        holidays: Set<String> = emptySet()
+        publicHolidays:  Set<String> = emptySet(),  // 🔥 공휴일
+        customDays:  Set<String> = emptySet()       // 🔥 안식일
     ): String {
 
         val today = Calendar.getInstance().apply {
@@ -47,35 +49,32 @@ object DateCalculator {
         // 날짜를 하나씩 이동하면서 카운트
         while (true) {
             val dayOfWeek = current.get(Calendar.DAY_OF_WEEK)
-            val isWeekend = (dayOfWeek == Calendar. SATURDAY || dayOfWeek == Calendar.SUNDAY)
-            val isHoliday = isPublicHoliday(current, holidays)
+            val isWeekend = (dayOfWeek == Calendar. SATURDAY || dayOfWeek == Calendar. SUNDAY)
 
-            // 엑셀 로직 그대로 구현
-            val shouldCount = when {
-                // 주말 제외 AND 공휴일 제외
-                excludeWeekends && excludePublicHolidays -> {
-                    !isWeekend && !isHoliday  // 평일만 카운트
-                }
-                // 주말 포함 AND 공휴일 제외
-                ! excludeWeekends && excludePublicHolidays -> {
-                    ! isHoliday  // 공휴일만 제외
-                }
-                // 주말 제외 AND 공휴일 포함
-                excludeWeekends && ! excludePublicHolidays -> {
-                    ! isWeekend  // 주말만 제외
-                }
-                // 모두 포함
-                else -> true
+            // 주말 제외 체크
+            if (excludeWeekends && isWeekend) {
+                current.add(Calendar.DAY_OF_MONTH, direction)
+                if (isSameDay(current, target)) break
+                continue
             }
 
-            if (shouldCount) {
-                count++
+            // 공휴일 제외 체크
+            if (excludePublicHolidays && isPublicHoliday(current, publicHolidays)) {
+                current.add(Calendar.DAY_OF_MONTH, direction)
+                if (isSameDay(current, target)) break
+                continue
             }
 
-            // 다음 날짜로 이동
+            // 안식일 제외 체크
+            if (excludeCustomDays && isPublicHoliday(current, customDays)) {  // 🔥 안식일 체크
+                current.add(Calendar.DAY_OF_MONTH, direction)
+                if (isSameDay(current, target)) break
+                continue
+            }
+
+            count++
             current.add(Calendar.DAY_OF_MONTH, direction)
 
-            // 목표일에 도달했으면 종료
             if (isSameDay(current, target)) break
         }
 

@@ -163,12 +163,41 @@ fun DdayScreen(
             }
         }
     }
-    
-    // 추가/편집 다이얼로그
+
+    // SettingsDialog 호출 부분
+    if (showSettingsDialog) {
+        SettingsDialog(
+            settings = settings,
+            isLoadingHolidays = isLoadingHolidays,
+            onDismiss = {
+                showSettingsDialog = false
+            },
+            onSave = { newSettings ->
+                viewModel.updateSettings(newSettings)
+                snackbarMessage = "설정이 저장되었습니다"
+                showSnackbar = true
+            },
+            onFetchHolidays = { year ->
+                viewModel.fetchPublicHolidaysFromApi(year) { success, message ->
+                    snackbarMessage = message
+                    showSnackbar = true
+                }
+            },
+            onAddCustomDay = { holiday ->  // 🔥 변경
+                viewModel.addCustomDay(holiday)
+            },
+            onRemoveCustomDay = { date ->  // 🔥 변경
+                viewModel.removeCustomDay(date)
+            }
+        )
+    }
+
+    // AddEditDialog 호출 부분
     if (showAddDialog) {
         AddEditDialog(
             dday = editingDday,
-            holidays = settings.holidays.map { it.date }.toSet(),  // ✅ 공휴일 전달
+            publicHolidays = settings.publicHolidays. map { it.date }. toSet(),  // 🔥 공휴일
+            customDays = settings.customDays.map { it.date }.toSet(),          // 🔥 안식일
             onDismiss = {
                 showAddDialog = false
                 editingDday = null
@@ -187,32 +216,5 @@ fun DdayScreen(
             }
         )
     }
-    
-    // 설정 다이얼로그
-    if (showSettingsDialog) {
-        SettingsDialog(
-            settings = settings,
-            isLoadingHolidays = isLoadingHolidays,
-            onDismiss = {
-                showSettingsDialog = false
-            },
-            onSave = { newSettings ->
-                viewModel.updateSettings(newSettings)
-                snackbarMessage = "설정이 저장되었습니다"
-                showSnackbar = true
-            },
-            onFetchHolidays = { year ->
-                viewModel.fetchHolidaysFromApi(year) { success, message ->
-                    snackbarMessage = message
-                    showSnackbar = true
-                }
-            },
-            onAddHoliday = { holiday ->
-                viewModel.addHoliday(holiday)
-            },
-            onRemoveHoliday = { date ->
-                viewModel.removeHoliday(date)
-            }
-        )
-    }
+
 }

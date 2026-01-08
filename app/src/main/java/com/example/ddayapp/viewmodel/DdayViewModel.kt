@@ -1,12 +1,12 @@
 package com.example.ddayapp.viewmodel
 
-import android.app.Application
+import android. app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ddayapp. data.DDay
-import com.example.ddayapp.data.Holiday
+import com. example.ddayapp.data. DDay
+import com.example. ddayapp.data.Holiday
 import com.example.ddayapp.data.Settings
-import com.example.ddayapp.utils.HolidayApi
+import com. example.ddayapp.utils. HolidayApi
 import com.example.ddayapp.utils.PreferencesHelper
 import kotlinx.coroutines.flow. MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,7 +29,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         loadData()
-        autoLoadCurrentYearHolidays()  // 🔥 자동으로 올해 공휴일 로드
+        autoLoadCurrentYearHolidays()
     }
 
     /**
@@ -48,8 +48,8 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         val currentSettings = _settings.value
 
         // 이미 올해 공휴일이 있는지 확인
-        val hasCurrentYearHolidays = currentSettings.publicHolidays.any {
-            it.date. startsWith(currentYear)
+        val hasCurrentYearHolidays = currentSettings. publicHolidays.any { holiday ->
+            holiday.date. startsWith(currentYear)
         }
 
         // 올해 공휴일이 없으면 자동 로드
@@ -71,8 +71,8 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
      * D-day 업데이트
      */
     fun updateDDay(dday: DDay) {
-        val updatedList = _ddays.value.map {
-            if (it.id == dday.id) dday else it
+        val updatedList = _ddays.value.map { existingDday ->
+            if (existingDday.id == dday.id) dday else existingDday
         }
         _ddays.value = updatedList
         prefsHelper.saveDDays(updatedList)
@@ -82,9 +82,9 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
      * D-day 삭제
      */
     fun deleteDDay(id: Long) {
-        val updatedList = _ddays.value.filterNot { it.id == id }
+        val updatedList = _ddays.value.filterNot { dday -> dday.id == id }
         _ddays.value = updatedList
-        prefsHelper.saveDDays(updatedList)
+        prefsHelper. saveDDays(updatedList)
     }
 
     /**
@@ -99,7 +99,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
      * 안식일 추가 (수동)
      */
     fun addCustomDay(holiday: Holiday) {
-        val currentSettings = _settings.value
+        val currentSettings = _settings. value
         val updatedCustomDays = (currentSettings.customDays + holiday)
             .distinctBy { it.date }
             .sortedBy { it.date }
@@ -110,9 +110,9 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
     /**
      * 안식일 삭제 (수동)
      */
-    fun removeCustomDay(date: String) {
+    fun removeCustomDay(date:  String) {
         val currentSettings = _settings.value
-        val updatedCustomDays = currentSettings.customDays.filter { it.date != date }
+        val updatedCustomDays = currentSettings.customDays.filter { holiday -> holiday.date != date }
         val newSettings = currentSettings.copy(customDays = updatedCustomDays)
         updateSettings(newSettings)
     }
@@ -130,7 +130,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
                 val currentSettings = _settings.value
                 val mergedHolidays = (currentSettings.publicHolidays + newHolidays)
                     .distinctBy { it.date }
-                    .sortedBy { it.date }
+                    . sortedBy { it.date }
                 val newSettings = currentSettings.copy(publicHolidays = mergedHolidays)
                 updateSettings(newSettings)
 
@@ -138,7 +138,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             result.onFailure { exception ->
-                onComplete?.invoke(false, "공휴일 정보를 가져오는데 실패했습니다:  ${exception.message}")
+                onComplete?. invoke(false, "공휴일 정보를 가져오는데 실패했습니다:  ${exception.message}")
             }
 
             _isLoadingHolidays.value = false
@@ -151,6 +151,6 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
     fun clearAllData() {
         _ddays.value = emptyList()
         _settings.value = Settings()
-        prefsHelper. clearAll()
+        prefsHelper.clearAll()
     }
 }

@@ -1,4 +1,4 @@
-package com.example.ddayapp.ui.components
+package com.example.ddayapp.ui. components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -6,19 +6,19 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
+import androidx.compose.material. icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose. ui.text.font.FontWeight
+import androidx.compose.ui. unit.dp
+import androidx.compose. ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.ddayapp.data.Holiday
-import com.example.ddayapp.data.Settings
+import com.example. ddayapp.data.Settings
 import com.example.ddayapp.utils.DateCalculator
 import java.util.*
 
@@ -30,20 +30,22 @@ fun SettingsDialog(
     onDismiss: () -> Unit,
     onSave: (Settings) -> Unit,
     onFetchHolidays: (String) -> Unit,
-    onAddHoliday: (Holiday) -> Unit,
-    onRemoveHoliday: (String) -> Unit
+    onAddCustomDay: (Holiday) -> Unit,
+    onRemoveCustomDay: (String) -> Unit
 ) {
-    var holidays by remember { mutableStateOf(settings.holidays) }
+    var publicHolidays by remember { mutableStateOf(settings.publicHolidays) }
+    var customDays by remember { mutableStateOf(settings.customDays) }
     var sabbathDay by remember { mutableStateOf(settings.sabbathDay) }
-    var newHolidayDate by remember { mutableStateOf("") }
-    var newHolidayName by remember { mutableStateOf("") }
+    var newCustomDate by remember { mutableStateOf("") }
+    var newCustomName by remember { mutableStateOf("") }
     var selectedYear by remember { mutableStateOf(Calendar.getInstance().get(Calendar.YEAR).toString()) }
     var showDatePicker by remember { mutableStateOf(false) }
 
     val weekDays = listOf("월", "화", "수", "목", "금", "토", "일")
 
     LaunchedEffect(settings) {
-        holidays = settings.holidays
+        publicHolidays = settings.publicHolidays
+        customDays = settings. customDays
         sabbathDay = settings.sabbathDay
     }
 
@@ -54,8 +56,8 @@ fun SettingsDialog(
                 .fillMaxHeight(0.9f)
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
+            colors = CardDefaults. cardColors(
+                containerColor = Color. White
             )
         ) {
             Column(
@@ -65,9 +67,9 @@ fun SettingsDialog(
             ) {
                 // 헤더
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier = Modifier. fillMaxWidth(),
+                    horizontalArrangement = Arrangement. SpaceBetween,
+                    verticalAlignment = Alignment. CenterVertically
                 ) {
                     Text(
                         text = "휴무일 설정",
@@ -79,196 +81,81 @@ fun SettingsDialog(
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "닫기",
-                            tint = Color.Gray
+                            tint = Color. Gray
                         )
                     }
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    text = "추가한 휴무일은 D-day 계산에서 제외됩니다",
-                    fontSize = 12.sp,
-                    color = Color(0xFF999999),
-                    modifier = Modifier.padding(bottom = 12.dp)
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier. height(24.dp))
 
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .verticalScroll(rememberScrollState())
+                        . verticalScroll(rememberScrollState())
                 ) {
-                    // 공휴일 설정 섹션
+                    // 🔥 공휴일 섹션 (자동)
                     Text(
-                        text = "공휴일 등록",
+                        text = "공휴일 (자동)",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 12.dp)
+                        color = Color(0xFF24a19c)
                     )
 
-
-                    // API 자동 추가 섹션
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFFF5F5F5)
-                        ),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(12.dp)
-                        ) {
-                            Text(
-                                text = "한국 공휴일 자동 추가",
-                                fontSize = 12.sp,
-                                color = Color(0xFF666666),
-                                modifier = Modifier.padding(bottom = 8.dp)
-                            )
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                // 연도 선택
-                                var expanded by remember { mutableStateOf(false) }
-                                val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-                                val years = (currentYear until currentYear + 5).map { it.toString() }
-
-                                ExposedDropdownMenuBox(
-                                    expanded = expanded,
-                                    onExpandedChange = { expanded = !expanded },
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    OutlinedTextField(
-                                        value = "${selectedYear}년",
-                                        onValueChange = {},
-                                        readOnly = true,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .menuAnchor(),
-                                        trailingIcon = {
-                                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                                        },
-                                        shape = RoundedCornerShape(8.dp)
-                                    )
-
-                                    ExposedDropdownMenu(
-                                        expanded = expanded,
-                                        onDismissRequest = { expanded = false }
-                                    ) {
-                                        years.forEach { year ->
-                                            DropdownMenuItem(
-                                                text = { Text("${year}년") },
-                                                onClick = {
-                                                    selectedYear = year
-                                                    expanded = false
-                                                }
-                                            )
-                                        }
-                                    }
-                                }
-
-                                Button(
-                                    onClick = { onFetchHolidays(selectedYear) },
-                                    enabled = !isLoadingHolidays,
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = Color(0xFF24a19c)
-                                    ),
-                                    shape = RoundedCornerShape(8.dp)
-                                ) {
-                                    Text(
-                                        text = if (isLoadingHolidays) "로딩중..." else "가져오기",
-                                        fontSize = 14.sp
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    // 안식일 설정
                     Text(
-                        text = "안식일 설정",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 12.dp)
+                        text = "시스템 연도에 맞춰 자동으로 불러옵니다",
+                        fontSize = 12.sp,
+                        color = Color(0xFF999999),
+                        modifier = Modifier. padding(top = 4.dp, bottom = 12.dp)
                     )
 
-                    // 수동 추가 섹션 - 날짜와 내용 입력
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    // 연도 선택 및 가져오기
+                    Row(
+                        modifier = Modifier. fillMaxWidth(),
+                        horizontalArrangement = Arrangement. spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         OutlinedTextField(
-                            value = newHolidayDate,
-                            onValueChange = { _: String -> },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { showDatePicker = true },
-                            placeholder = { Text("날짜 선택", fontSize = 14.sp) },
+                            value = selectedYear,
+                            onValueChange = {
+                                if (it.length <= 4 && it.all { char -> char.isDigit() }) {
+                                    selectedYear = it
+                                }
+                            },
+                            modifier = Modifier.weight(1f),
+                            label = { Text("연도", fontSize = 14.sp) },
+                            placeholder = { Text("2026", fontSize = 14.sp) },
                             singleLine = true,
-                            shape = RoundedCornerShape(8.dp),
-                            readOnly = true,
-                            enabled = false,
-                            colors = OutlinedTextFieldDefaults.colors(
-                                disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                                disabledBorderColor = MaterialTheme.colorScheme.outline,
-                                disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+                            shape = RoundedCornerShape(8.dp)
                         )
 
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                        Button(
+                            onClick = {
+                                if (selectedYear.length == 4) {
+                                    onFetchHolidays(selectedYear)
+                                }
+                            },
+                            enabled = ! isLoadingHolidays && selectedYear.length == 4,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF24a19c)
+                            ),
+                            shape = RoundedCornerShape(8.dp)
                         ) {
-                            OutlinedTextField(
-                                value = newHolidayName,
-                                onValueChange = { newHolidayName = it },
-                                modifier = Modifier.weight(1f),
-                                placeholder = { Text("내용 (선택)", fontSize = 14.sp) },
-                                singleLine = true,
-                                shape = RoundedCornerShape(8.dp)
-                            )
-
-                            Button(
-                                onClick = {
-                                    if (newHolidayDate.isNotBlank()) {
-                                        val newHoliday = Holiday(
-                                            date = newHolidayDate,
-                                            name = newHolidayName.ifBlank { "" }
-                                        )
-                                        onAddHoliday(newHoliday)
-                                        holidays = holidays + newHoliday
-                                        newHolidayDate = ""
-                                        newHolidayName = ""
-                                    }
-                                },
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFF24a19c)
-                                ),
-                                shape = RoundedCornerShape(8.dp)
-                            ) {
-                                Text("추가", fontSize = 14.sp)
+                            if (isLoadingHolidays) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(16.dp),
+                                    color = Color.White,
+                                    strokeWidth = 2.dp
+                                )
+                            } else {
+                                Text("가져오기", fontSize = 14.sp)
                             }
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier. height(16.dp))
 
-                    // 휴무 날짜 리스트
-                    Text(
-                        text = "휴무일 목록",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 12.dp)
-                    )
-
-                    if (holidays.isEmpty()) {
+                    // 공휴일 목록
+                    if (publicHolidays.isEmpty()) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -276,7 +163,7 @@ fun SettingsDialog(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "등록된 제외 날짜가 없습니다",
+                                text = "불러온 공휴일이 없습니다",
                                 fontSize = 14.sp,
                                 color = Color(0xFFBDBDBD)
                             )
@@ -286,15 +173,192 @@ fun SettingsDialog(
                             modifier = Modifier.fillMaxWidth(),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            holidays
+                            publicHolidays
                                 .filter { it.date.isNotBlank() }
+                                .take(5)  // 최대 5개만 표시
                                 .forEach { holiday ->
+                                    val displayDate = DateCalculator.formatDisplayDate(holiday.date)
+
+                                    Card(
+                                        modifier = Modifier. fillMaxWidth(),
+                                        colors = CardDefaults.cardColors(
+                                            containerColor = Color(0xFFF0F9F8)
+                                        ),
+                                        shape = RoundedCornerShape(8.dp)
+                                    ) {
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(12.dp),
+                                            horizontalArrangement = Arrangement. SpaceBetween,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Column {
+                                                Text(
+                                                    text = holiday.name,
+                                                    fontSize = 14.sp,
+                                                    fontWeight = FontWeight.Bold,
+                                                    color = Color(0xFF24a19c)
+                                                )
+                                                Text(
+                                                    text = displayDate,
+                                                    fontSize = 12.sp,
+                                                    color = Color(0xFF666666)
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+
+                            if (publicHolidays.size > 5) {
+                                Text(
+                                    text = "외 ${publicHolidays.size - 5}개",
+                                    fontSize = 12.sp,
+                                    color = Color(0xFF999999),
+                                    modifier = Modifier.padding(start = 8.dp)
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier. height(32.dp))
+
+                    // 🔥 안식일 섹션 (수동)
+                    Text(
+                        text = "안식일 (수동 추가)",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFFFF6B6B)
+                    )
+
+                    Text(
+                        text = "특정 날짜를 수동으로 추가하여 제외할 수 있습니다",
+                        fontSize = 12.sp,
+                        color = Color(0xFF999999),
+                        modifier = Modifier. padding(top = 4.dp, bottom = 12.dp)
+                    )
+
+                    // 날짜 추가
+                    Column(
+                        modifier = Modifier. fillMaxWidth(),
+                        verticalArrangement = Arrangement. spacedBy(8.dp)
+                    ) {
+                        OutlinedTextField(
+                            value = newCustomDate,
+                            onValueChange = {},
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { showDatePicker = true },
+                            label = { Text("날짜", fontSize = 14.sp) },
+                            placeholder = { Text("yyyy-MM-dd", fontSize = 14.sp) },
+                            enabled = false,
+                            singleLine = true,
+                            shape = RoundedCornerShape(8.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                disabledTextColor = Color. Black,
+                                disabledBorderColor = Color. Gray
+                            )
+                        )
+
+                        if (showDatePicker) {
+                            val datePickerState = rememberDatePickerState()
+                            DatePickerDialog(
+                                onDismissRequest = { showDatePicker = false },
+                                confirmButton = {
+                                    TextButton(onClick = {
+                                        datePickerState.selectedDateMillis?.let { millis ->
+                                            val cal = Calendar.getInstance().apply {
+                                                timeInMillis = millis
+                                            }
+                                            newCustomDate = String. format(
+                                                "%04d-%02d-%02d",
+                                                cal.get(Calendar.YEAR),
+                                                cal.get(Calendar. MONTH) + 1,
+                                                cal.get(Calendar. DAY_OF_MONTH)
+                                            )
+                                        }
+                                        showDatePicker = false
+                                    }) {
+                                        Text("확인")
+                                    }
+                                },
+                                dismissButton = {
+                                    TextButton(onClick = { showDatePicker = false }) {
+                                        Text("취소")
+                                    }
+                                }
+                            ) {
+                                DatePicker(state = datePickerState)
+                            }
+                        }
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            OutlinedTextField(
+                                value = newCustomName,
+                                onValueChange = { newCustomName = it },
+                                modifier = Modifier. weight(1f),
+                                label = { Text("내용", fontSize = 14.sp) },
+                                placeholder = { Text("내용 (선택)", fontSize = 14.sp) },
+                                singleLine = true,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+
+                            Button(
+                                onClick = {
+                                    if (newCustomDate.isNotBlank()) {
+                                        val newDay = Holiday(
+                                            date = newCustomDate,
+                                            name = newCustomName. ifBlank { "안식일" }
+                                        )
+                                        onAddCustomDay(newDay)
+                                        customDays = customDays + newDay
+                                        newCustomDate = ""
+                                        newCustomName = ""
+                                    }
+                                },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFFFF6B6B)
+                                ),
+                                shape = RoundedCornerShape(8.dp)
+                            ) {
+                                Text("추가", fontSize = 14.sp)
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier. height(16.dp))
+
+                    // 안식일 목록
+                    if (customDays.isEmpty()) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "등록된 안식일이 없습니다",
+                                fontSize = 14.sp,
+                                color = Color(0xFFBDBDBD)
+                            )
+                        }
+                    } else {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            customDays
+                                . filter { it.date.isNotBlank() }
+                                . forEach { holiday ->
                                     val displayDate = DateCalculator.formatDisplayDate(holiday.date)
 
                                     Card(
                                         modifier = Modifier.fillMaxWidth(),
                                         colors = CardDefaults.cardColors(
-                                            containerColor = Color(0xFFFAFAFA)
+                                            containerColor = Color(0xFFFFF5F5)
                                         ),
                                         shape = RoundedCornerShape(8.dp)
                                     ) {
@@ -308,31 +372,28 @@ fun SettingsDialog(
                                             Column(
                                                 modifier = Modifier.weight(1f)
                                             ) {
-                                                if (holiday.name.isNotBlank()) {
-                                                    Text(
-                                                        text = holiday.name,
-                                                        fontSize = 14.sp,
-                                                        fontWeight = FontWeight.Bold,
-                                                        color = Color(0xFF24a19c)
-                                                    )
-                                                }
+                                                Text(
+                                                    text = holiday.name,
+                                                    fontSize = 14.sp,
+                                                    fontWeight = FontWeight.Bold,
+                                                    color = Color(0xFFFF6B6B)
+                                                )
                                                 Text(
                                                     text = displayDate,
-                                                    fontSize = 14.sp,
+                                                    fontSize = 12.sp,
                                                     color = Color(0xFF666666)
                                                 )
                                             }
 
                                             TextButton(
                                                 onClick = {
-                                                    onRemoveHoliday(holiday.date)
-                                                    holidays =
-                                                        holidays.filter { it.date != holiday.date }
+                                                    onRemoveCustomDay(holiday.date)
+                                                    customDays = customDays. filter { it.date != holiday.date }
                                                 }
                                             ) {
                                                 Text(
                                                     "삭제",
-                                                    color = Color.Red,
+                                                    color = Color. Red,
                                                     fontSize = 14.sp
                                                 )
                                             }
@@ -349,7 +410,8 @@ fun SettingsDialog(
                 Button(
                     onClick = {
                         onSave(Settings(
-                            holidays = holidays,
+                            publicHolidays = publicHolidays,
+                            customDays = customDays,
                             sabbathDay = sabbathDay
                         ))
                         onDismiss()
@@ -365,45 +427,10 @@ fun SettingsDialog(
                     Text(
                         text = "저장",
                         color = Color.White,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium
+                        fontSize = 16.sp
                     )
                 }
             }
-        }
-    }
-
-    // DatePicker Dialog
-    if (showDatePicker) {
-        val datePickerState = rememberDatePickerState()
-
-        DatePickerDialog(
-            onDismissRequest = { showDatePicker = false },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        datePickerState.selectedDateMillis?.let { millis ->
-                            val calendar = Calendar.getInstance().apply {
-                                timeInMillis = millis
-                            }
-                            val year = calendar.get(Calendar.YEAR)
-                            val month = calendar.get(Calendar.MONTH) + 1
-                            val day = calendar.get(Calendar.DAY_OF_MONTH)
-                            newHolidayDate = String.format("%04d-%02d-%02d", year, month, day)
-                        }
-                        showDatePicker = false
-                    }
-                ) {
-                    Text("확인")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) {
-                    Text("취소")
-                }
-            }
-        ) {
-            DatePicker(state = datePickerState)
         }
     }
 }

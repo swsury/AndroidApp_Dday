@@ -1,21 +1,21 @@
-package com.example.ddayapp.ui
+package com.example.ddayapp. ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
+import androidx. compose.foundation.lazy.items
+import androidx.compose.material. icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material. icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui. Modifier
+import androidx.compose. ui.graphics.Color
+import androidx.compose. ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.ddayapp.data.DDay
+import androidx.compose. ui.unit.sp
+import androidx.lifecycle.viewmodel.compose. viewModel
+import com.example. ddayapp.data.DDay
 import com.example.ddayapp.ui.components.AddEditDialog
 import com.example.ddayapp.ui.components.DdayCard
 import com.example.ddayapp.ui.components.SettingsDialog
@@ -30,15 +30,15 @@ fun DdayScreen(
     val ddays by viewModel.ddays.collectAsState()
     val settings by viewModel.settings.collectAsState()
     val isLoadingHolidays by viewModel.isLoadingHolidays.collectAsState()
-    
+
     var showAddDialog by remember { mutableStateOf(false) }
     var showSettingsDialog by remember { mutableStateOf(false) }
-    var editingDday by remember { mutableStateOf<DDay?>(null) }
+    var editingDday by remember { mutableStateOf<DDay? >(null) }
     var showSnackbar by remember { mutableStateOf(false) }
     var snackbarMessage by remember { mutableStateOf("") }
-    
+
     val snackbarHostState = remember { SnackbarHostState() }
-    
+
     // Snackbar 표시
     LaunchedEffect(showSnackbar) {
         if (showSnackbar) {
@@ -46,30 +46,25 @@ fun DdayScreen(
             showSnackbar = false
         }
     }
-    
+
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Text(
-                            text = "D-day",
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
-                    }
+                    Text(
+                        text = "D-day",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
                 },
                 actions = {
                     IconButton(onClick = { showSettingsDialog = true }) {
                         Icon(
                             imageVector = Icons.Default.Settings,
                             contentDescription = "설정",
-                            tint = Color.White
+                            tint = Color. White
                         )
                     }
                 },
@@ -88,7 +83,7 @@ fun DdayScreen(
                 contentColor = Color.White
             ) {
                 Icon(
-                    imageVector = Icons.Default.Add,
+                    imageVector = Icons.Default. Add,
                     contentDescription = "추가"
                 )
             }
@@ -97,33 +92,34 @@ fun DdayScreen(
     ) { paddingValues ->
         Box(
             modifier = Modifier
-                .fillMaxSize()
+                . fillMaxSize()
                 .padding(paddingValues)
         ) {
-            if (ddays.isEmpty()) {
+            if (ddays. isEmpty()) {
                 // 빈 상태
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(32.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
                     Text(
                         text = "📅",
                         fontSize = 64.sp
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Text(
                         text = "D-day가 없습니다",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF1B1C1F)
                     )
-                    
+
                     Spacer(modifier = Modifier.height(8.dp))
-                    
+
                     Text(
                         text = "+ 버튼을 눌러 새로운 D-day를 추가하세요",
                         fontSize = 14.sp,
@@ -139,7 +135,7 @@ fun DdayScreen(
                 ) {
                     items(
                         items = ddays,
-                        key = { it.id }
+                        key = { dday -> dday.id }
                     ) { dday ->
                         DdayCard(
                             dday = dday,
@@ -154,14 +150,39 @@ fun DdayScreen(
                             }
                         )
                     }
-                    
+
                     // 하단 여백 (FAB 공간)
                     item {
-                        Spacer(modifier = Modifier.height(80.dp))
+                        Spacer(modifier = Modifier. height(80.dp))
                     }
                 }
             }
         }
+    }
+
+    // AddEditDialog 호출 부분
+    if (showAddDialog) {
+        AddEditDialog(
+            dday = editingDday,
+            publicHolidays = settings.publicHolidays. map { it.date }. toSet(),
+            customDays = settings.customDays.map { it.date }.toSet(),
+            onDismiss = {
+                showAddDialog = false
+                editingDday = null
+            },
+            onSave = { dday ->
+                if (editingDday == null) {
+                    viewModel.addDDay(dday)
+                    snackbarMessage = "추가되었습니다"
+                } else {
+                    viewModel. updateDDay(dday)
+                    snackbarMessage = "수정되었습니다"
+                }
+                showSnackbar = true
+                showAddDialog = false
+                editingDday = null
+            }
+        )
     }
 
     // SettingsDialog 호출 부분
@@ -183,38 +204,12 @@ fun DdayScreen(
                     showSnackbar = true
                 }
             },
-            onAddCustomDay = { holiday ->  // 🔥 변경
+            onAddCustomDay = { holiday ->
                 viewModel.addCustomDay(holiday)
             },
-            onRemoveCustomDay = { date ->  // 🔥 변경
-                viewModel.removeCustomDay(date)
+            onRemoveCustomDay = { date ->
+                viewModel. removeCustomDay(date)
             }
         )
     }
-
-    // AddEditDialog 호출 부분
-    if (showAddDialog) {
-        AddEditDialog(
-            dday = editingDday,
-            publicHolidays = settings.publicHolidays. map { it.date }. toSet(),  // 🔥 공휴일
-            customDays = settings.customDays.map { it.date }.toSet(),          // 🔥 안식일
-            onDismiss = {
-                showAddDialog = false
-                editingDday = null
-            },
-            onSave = { dday ->
-                if (editingDday == null) {
-                    viewModel.addDDay(dday)
-                    snackbarMessage = "추가되었습니다"
-                } else {
-                    viewModel.updateDDay(dday)
-                    snackbarMessage = "수정되었습니다"
-                }
-                showSnackbar = true
-                showAddDialog = false
-                editingDday = null
-            }
-        )
-    }
-
 }

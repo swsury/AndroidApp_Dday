@@ -1,13 +1,13 @@
 package com.example.ddayapp. ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation. border
-import androidx.compose.foundation. clickable
+import androidx. compose.foundation. border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation. rememberScrollState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose. foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose. foundation.verticalScroll
 import androidx.compose.material. icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose. ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.ddayapp.data.DDay
-import com.example.ddayapp.ui.theme.toComposeColor
+import com.example.ddayapp. ui.theme.toComposeColor
 import com.example.ddayapp.utils.DateCalculator
 import java. util. Calendar
 
@@ -29,16 +29,18 @@ import java. util. Calendar
 @Composable
 fun AddEditDialog(
     dday: DDay?,
-    holidays:  Set<String>,  // ✅ 공휴일 데이터
+    publicHolidays:  Set<String>,  // 🔥 공휴일 데이터
+    customDays: Set<String>,      // 🔥 안식일 데이터
     onDismiss: () -> Unit,
     onSave: (DDay) -> Unit
 ) {
-    var labelTitle by remember { mutableStateOf(dday?.labelTitle ?:  "") }
-    var title by remember { mutableStateOf(dday?.title ?: "") }
-    var date by remember { mutableStateOf(dday?.date ?:  DateCalculator.getTodayString()) }
-    var selectedColor by remember { mutableStateOf(dday?. color ?: "#24a19c") }
-    var excludePublicHolidays by remember { mutableStateOf(dday?. excludePublicHolidays ?: false) }
-    var excludeWeekends by remember { mutableStateOf(dday?.excludeWeekends ?: false) }
+    var labelTitle by remember { mutableStateOf(dday?.labelTitle ?: "") }
+    var title by remember { mutableStateOf(dday?. title ?: "") }
+    var date by remember { mutableStateOf(dday?.date ?: DateCalculator.getTodayString()) }
+    var selectedColor by remember { mutableStateOf(dday?.color ?: "#24a19c") }
+    var excludePublicHolidays by remember { mutableStateOf(dday?.excludePublicHolidays ?: false) }
+    var excludeCustomDays by remember { mutableStateOf(dday?.excludeCustomDays ?: false) }  // 🔥 추가
+    var excludeWeekends by remember { mutableStateOf(dday?.excludeWeekends ?:  false) }
 
     /* 📅 DatePicker 상태 */
     var showDatePicker by remember { mutableStateOf(false) }
@@ -85,11 +87,11 @@ fun AddEditDialog(
 
                 /* ===== 라벨 ===== */
                 Text("라벨", fontSize = 14.sp, color = Color(0xFF666666))
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier. height(8.dp))
                 OutlinedTextField(
                     value = labelTitle,
                     onValueChange = { labelTitle = it },
-                    modifier = Modifier. fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     placeholder = { Text("라벨을 입력하세요") },
                     singleLine = true
                 )
@@ -139,9 +141,9 @@ fun AddEditDialog(
                                     }
                                     date = String.format(
                                         "%04d-%02d-%02d",
-                                        cal.get(Calendar.YEAR),
+                                        cal. get(Calendar.YEAR),
                                         cal.get(Calendar. MONTH) + 1,
-                                        cal.get(Calendar. DAY_OF_MONTH)
+                                        cal.get(Calendar.DAY_OF_MONTH)
                                     )
                                 }
                                 showDatePicker = false
@@ -163,7 +165,7 @@ fun AddEditDialog(
 
                 /* ---------- 공휴일 제외 ---------- */
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalAlignment = Alignment. CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Checkbox(
@@ -172,9 +174,30 @@ fun AddEditDialog(
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        text = "공휴일 제외",
+                        text = "공휴일 제외 (${publicHolidays.size}개)",
                         fontSize = 14.sp,
-                        color = Color(0xFF333333)
+                        color = Color(0xFF24a19c),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                Spacer(Modifier.height(8.dp))
+
+                /* ---------- 안식일 제외 ---------- */
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Checkbox(
+                        checked = excludeCustomDays,
+                        onCheckedChange = { excludeCustomDays = it }
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = "안식일 제외 (${customDays.size}개)",
+                        fontSize = 14.sp,
+                        color = Color(0xFFFF6B6B),
+                        fontWeight = FontWeight.Bold
                     )
                 }
 
@@ -182,7 +205,7 @@ fun AddEditDialog(
 
                 /* ---------- 주말 제외 ---------- */
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalAlignment = Alignment. CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Checkbox(
@@ -199,10 +222,18 @@ fun AddEditDialog(
 
                 Text(
                     text = when {
+                        excludePublicHolidays && excludeCustomDays && excludeWeekends ->
+                            "공휴일, 안식일, 주말을 제외하고 카운트합니다"
+                        excludePublicHolidays && excludeCustomDays ->
+                            "공휴일과 안식일을 제외하고 카운트합니다"
                         excludePublicHolidays && excludeWeekends ->
                             "공휴일과 주말을 제외하고 카운트합니다"
+                        excludeCustomDays && excludeWeekends ->
+                            "안식일과 주말을 제외하고 카운트합니다"
                         excludePublicHolidays ->
                             "공휴일을 제외하고 카운트합니다"
+                        excludeCustomDays ->
+                            "안식일을 제외하고 카운트합니다"
                         excludeWeekends ->
                             "주말을 제외하고 카운트합니다"
                         else ->
@@ -210,7 +241,7 @@ fun AddEditDialog(
                     },
                     fontSize = 12.sp,
                     color = Color(0xFF999999),
-                    modifier = Modifier. padding(top = 8.dp, start = 8.dp)
+                    modifier = Modifier.padding(top = 8.dp, start = 8.dp)
                 )
 
                 Spacer(Modifier.height(16.dp))
@@ -244,20 +275,21 @@ fun AddEditDialog(
                 Button(
                     onClick = {
                         if (title.isBlank()) {
-                            // 제목이 비어있으면 저장하지 않음
                             return@Button
                         }
 
                         onSave(
                             DDay(
-                                id = dday?.id ?:  System.currentTimeMillis(),  // ✅ Long 타입
+                                id = dday?.id ?: System.currentTimeMillis(),
                                 labelTitle = labelTitle,
                                 title = title,
                                 date = date,
                                 color = selectedColor,
                                 excludePublicHolidays = excludePublicHolidays,
+                                excludeCustomDays = excludeCustomDays,  // 🔥 추가
                                 excludeWeekends = excludeWeekends,
-                                holidays = holidays  // ✅ Settings의 공휴일 저장
+                                publicHolidays = publicHolidays,  // 🔥 수정
+                                customDays = customDays           // 🔥 수정
                             )
                         )
                     },
@@ -270,7 +302,7 @@ fun AddEditDialog(
                 ) {
                     Text(
                         text = if (dday == null) "추가" else "수정",
-                        color = Color.White,
+                        color = Color. White,
                         fontSize = 16.sp
                     )
                 }

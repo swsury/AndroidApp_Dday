@@ -1,50 +1,52 @@
-package com.example.ddayapp.ui.components
+package com.example.ddayapp. ui. components
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation. background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
+import androidx.compose.foundation. shape.RoundedCornerShape
+import androidx.compose.material. icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.MoreHoriz
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled. MoreHoriz
+import androidx.compose. material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose. ui.text.font.FontWeight
+import androidx.compose.ui. unit.dp
+import androidx.compose. ui.unit.sp
 import com.example.ddayapp.data.DDay
 import com.example.ddayapp.ui.theme.toComposeColor
 import com.example.ddayapp.utils.DateCalculator
 
 @Composable
 fun DdayCard(
-    dday: DDay,
+    dday:  DDay,
+    publicHolidays: Set<String>,  // 🔥 외부에서 받기
+    customDays: Set<String>,      // 🔥 외부에서 받기
     onEdit: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
-    val cardColor = dday.color.toComposeColor()
+    val cardColor = dday. color. toComposeColor()
 
-    val ddayText = DateCalculator.calculateDDay(
+    val ddayText = DateCalculator. calculateDDay(
         targetDate = dday.date,
         excludePublicHolidays = dday.excludePublicHolidays,
-        excludeCustomDays = dday.excludeCustomDays,  // 🔥 추가
+        excludeCustomDays = dday. excludeCustomDays,
         excludeWeekends = dday.excludeWeekends,
-        publicHolidays = dday.publicHolidays,  // 🔥 변경
-        customDays = dday.customDays           // 🔥 추가
+        publicHolidays = publicHolidays,  // 🔥 실시간 데이터 사용
+        customDays = customDays           // 🔥 실시간 데이터 사용
     )
 
-    val formattedDate = DateCalculator.formatDate(dday.date)
+    val formattedDate = DateCalculator. formatDate(dday.date)
 
     Card(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier. fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults. cardElevation(defaultElevation = 4.dp)
     ) {
         Column {
             /* 상단 컬러 바 */
@@ -78,7 +80,7 @@ fun DdayCard(
                             Icon(
                                 imageVector = Icons.Default.MoreHoriz,
                                 contentDescription = "메뉴",
-                                tint = Color.White
+                                tint = Color. White
                             )
                         }
 
@@ -107,7 +109,7 @@ fun DdayCard(
 
             /* 카드 내용 */
             Column(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier. padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Row(
@@ -129,22 +131,20 @@ fun DdayCard(
                     )
                 }
 
-                Divider(thickness = 0.5.dp)
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    horizontalArrangement = Arrangement. spacedBy(4.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.CalendarToday,
-                        contentDescription = "날짜",
-                        tint = cardColor,
-                        modifier = Modifier.size(14.dp)
+                        contentDescription = null,
+                        tint = Color.Gray,
+                        modifier = Modifier. size(14.dp)
                     )
                     Text(
                         text = formattedDate,
                         fontSize = 12.sp,
-                        color = cardColor
+                        color = Color.Gray
                     )
                 }
             }

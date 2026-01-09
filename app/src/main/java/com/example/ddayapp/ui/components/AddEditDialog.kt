@@ -1,15 +1,15 @@
-package com.example.ddayapp. ui.components
+package com.example.ddayapp.ui.components
 
-import androidx.compose.foundation.background
-import androidx. compose.foundation. border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation. background
+import androidx.compose.foundation. border
+import androidx.compose.foundation. clickable
+import androidx.compose. foundation.layout.*
+import androidx. compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose. foundation.shape.RoundedCornerShape
-import androidx.compose. foundation.verticalScroll
-import androidx.compose.material. icons.Icons
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons. filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,9 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose. ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.ddayapp.data.DDay
-import com.example.ddayapp. ui.theme.toComposeColor
+import com.example.ddayapp.ui.theme.toComposeColor
 import com.example.ddayapp.utils.DateCalculator
-import java. util. Calendar
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,12 +35,12 @@ fun AddEditDialog(
     onSave: (DDay) -> Unit
 ) {
     var labelTitle by remember { mutableStateOf(dday?.labelTitle ?: "") }
-    var title by remember { mutableStateOf(dday?. title ?: "") }
+    var title by remember { mutableStateOf(dday?.title ?: "") }
     var date by remember { mutableStateOf(dday?.date ?: DateCalculator.getTodayString()) }
     var selectedColor by remember { mutableStateOf(dday?.color ?: "#24a19c") }
     var excludePublicHolidays by remember { mutableStateOf(dday?.excludePublicHolidays ?: false) }
-    var excludeCustomDays by remember { mutableStateOf(dday?.excludeCustomDays ?: false) }  // 🔥 추가
-    var excludeWeekends by remember { mutableStateOf(dday?.excludeWeekends ?:  false) }
+    var excludeCustomDays by remember { mutableStateOf(dday?.excludeCustomDays ?: false) }
+    var excludeWeekends by remember { mutableStateOf(dday?.excludeWeekends ?: false) }
 
     /* 📅 DatePicker 상태 */
     var showDatePicker by remember { mutableStateOf(false) }
@@ -79,7 +79,7 @@ fun AddEditDialog(
                         color = Color.Black
                     )
                     IconButton(onClick = onDismiss) {
-                        Icon(Icons.Default. Close, contentDescription = "닫기")
+                        Icon(Icons.Default.Close, contentDescription = "닫기")
                     }
                 }
 
@@ -87,11 +87,11 @@ fun AddEditDialog(
 
                 /* ===== 라벨 ===== */
                 Text("라벨", fontSize = 14.sp, color = Color(0xFF666666))
-                Spacer(Modifier. height(8.dp))
+                Spacer(Modifier.height(8.dp))
                 OutlinedTextField(
                     value = labelTitle,
                     onValueChange = { labelTitle = it },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier. fillMaxWidth(),
                     placeholder = { Text("라벨을 입력하세요") },
                     singleLine = true
                 )
@@ -139,11 +139,11 @@ fun AddEditDialog(
                                     val cal = Calendar.getInstance().apply {
                                         timeInMillis = millis
                                     }
-                                    date = String.format(
+                                    date = String. format(
                                         "%04d-%02d-%02d",
-                                        cal. get(Calendar.YEAR),
+                                        cal.get(Calendar.YEAR),
                                         cal.get(Calendar. MONTH) + 1,
-                                        cal.get(Calendar.DAY_OF_MONTH)
+                                        cal.get(Calendar. DAY_OF_MONTH)
                                     )
                                 }
                                 showDatePicker = false
@@ -165,7 +165,7 @@ fun AddEditDialog(
 
                 /* ---------- 공휴일 제외 ---------- */
                 Row(
-                    verticalAlignment = Alignment. CenterVertically,
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Checkbox(
@@ -181,7 +181,7 @@ fun AddEditDialog(
                     )
                 }
 
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier. height(8.dp))
 
                 /* ---------- 안식일 제외 ---------- */
                 Row(
@@ -205,7 +205,7 @@ fun AddEditDialog(
 
                 /* ---------- 주말 제외 ---------- */
                 Row(
-                    verticalAlignment = Alignment. CenterVertically,
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Checkbox(
@@ -269,12 +269,13 @@ fun AddEditDialog(
                     }
                 }
 
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier. height(24.dp))
 
                 /* ===== 저장 ===== */
                 Button(
                     onClick = {
                         if (title.isBlank()) {
+                            // 제목이 비어있으면 저장하지 않음
                             return@Button
                         }
 
@@ -286,10 +287,9 @@ fun AddEditDialog(
                                 date = date,
                                 color = selectedColor,
                                 excludePublicHolidays = excludePublicHolidays,
-                                excludeCustomDays = excludeCustomDays,  // 🔥 추가
-                                excludeWeekends = excludeWeekends,
-                                publicHolidays = publicHolidays,  // 🔥 수정
-                                customDays = customDays           // 🔥 수정
+                                excludeCustomDays = excludeCustomDays,
+                                excludeWeekends = excludeWeekends
+                                // ❌ publicHolidays, customDays 제거 - Settings에서 가져옴
                             )
                         )
                     },
@@ -297,12 +297,12 @@ fun AddEditDialog(
                         .fillMaxWidth()
                         .height(48.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = selectedColor.toComposeColor()
+                        containerColor = selectedColor. toComposeColor()
                     )
                 ) {
                     Text(
                         text = if (dday == null) "추가" else "수정",
-                        color = Color. White,
+                        color = Color.White,
                         fontSize = 16.sp
                     )
                 }

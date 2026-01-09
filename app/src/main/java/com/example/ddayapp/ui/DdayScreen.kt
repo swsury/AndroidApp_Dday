@@ -1,43 +1,53 @@
-package com.example.ddayapp. ui
+package com.example.ddayapp.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx. compose.foundation.lazy.items
+import androidx.compose.foundation.lazy. items
 import androidx.compose.material. icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material. icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui. Modifier
-import androidx.compose. ui.graphics.Color
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose. ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose. ui.unit.sp
-import androidx.lifecycle.viewmodel.compose. viewModel
-import com.example. ddayapp.data.DDay
-import com.example.ddayapp.ui.components.AddEditDialog
-import com.example.ddayapp.ui.components.DdayCard
-import com.example.ddayapp.ui.components.SettingsDialog
-import com.example.ddayapp.ui.theme.BackgroundGray
+import androidx.compose.ui. unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.ddayapp.data.DDay
+import com.example.ddayapp. ui.components.AddEditDialog
+import com.example. ddayapp.ui.components. DdayCard
+import com. example.ddayapp.ui. components. SettingsDialog
+import com.example. ddayapp.ui.theme.BackgroundGray
 import com.example.ddayapp.viewmodel.DdayViewModel
+import com.example.ddayapp.data.Settings
+import com.example.ddayapp.data.Holiday
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DdayScreen(
     viewModel: DdayViewModel = viewModel()
 ) {
-    val ddays by viewModel.ddays.collectAsState()
+    val ddays by viewModel.ddays. collectAsState()
     val settings by viewModel.settings.collectAsState()
     val isLoadingHolidays by viewModel.isLoadingHolidays.collectAsState()
 
     var showAddDialog by remember { mutableStateOf(false) }
     var showSettingsDialog by remember { mutableStateOf(false) }
-    var editingDday by remember { mutableStateOf<DDay? >(null) }
+    var editingDday by remember { mutableStateOf<DDay?>(null) }
     var showSnackbar by remember { mutableStateOf(false) }
     var snackbarMessage by remember { mutableStateOf("") }
 
     val snackbarHostState = remember { SnackbarHostState() }
+
+    // 🔥 실시간 공휴일/안식일 데이터
+    val publicHolidays = remember(settings. publicHolidays) {
+        settings.publicHolidays.map { it.date }. toSet()
+    }
+    val customDays = remember(settings.customDays) {
+        settings.customDays.map { it.date }.toSet()
+    }
 
     // Snackbar 표시
     LaunchedEffect(showSnackbar) {
@@ -64,7 +74,7 @@ fun DdayScreen(
                         Icon(
                             imageVector = Icons.Default.Settings,
                             contentDescription = "설정",
-                            tint = Color. White
+                            tint = Color.White
                         )
                     }
                 },
@@ -83,7 +93,7 @@ fun DdayScreen(
                 contentColor = Color.White
             ) {
                 Icon(
-                    imageVector = Icons.Default. Add,
+                    imageVector = Icons. Default.Add,
                     contentDescription = "추가"
                 )
             }
@@ -92,10 +102,10 @@ fun DdayScreen(
     ) { paddingValues ->
         Box(
             modifier = Modifier
-                . fillMaxSize()
+                .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            if (ddays. isEmpty()) {
+            if (ddays.isEmpty()) {
                 // 빈 상태
                 Column(
                     modifier = Modifier
@@ -109,7 +119,7 @@ fun DdayScreen(
                         fontSize = 64.sp
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier. height(16.dp))
 
                     Text(
                         text = "D-day가 없습니다",
@@ -129,7 +139,7 @@ fun DdayScreen(
             } else {
                 // D-day 리스트
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier. fillMaxSize(),
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
@@ -139,6 +149,8 @@ fun DdayScreen(
                     ) { dday ->
                         DdayCard(
                             dday = dday,
+                            publicHolidays = publicHolidays,  // 🔥 실시간 전달
+                            customDays = customDays,          // 🔥 실시간 전달
                             onEdit = {
                                 editingDday = dday
                                 showAddDialog = true
@@ -164,8 +176,8 @@ fun DdayScreen(
     if (showAddDialog) {
         AddEditDialog(
             dday = editingDday,
-            publicHolidays = settings.publicHolidays. map { it.date }. toSet(),
-            customDays = settings.customDays.map { it.date }.toSet(),
+            publicHolidays = publicHolidays,  // 🔥 실시간 전달
+            customDays = customDays,          // 🔥 실시간 전달
             onDismiss = {
                 showAddDialog = false
                 editingDday = null
@@ -193,22 +205,22 @@ fun DdayScreen(
             onDismiss = {
                 showSettingsDialog = false
             },
-            onSave = { newSettings ->
-                viewModel.updateSettings(newSettings)
+            onSave = { newSettings:  Settings ->  // 🔥 타입 명시
+                viewModel. updateSettings(newSettings)
                 snackbarMessage = "설정이 저장되었습니다"
                 showSnackbar = true
             },
-            onFetchHolidays = { year ->
-                viewModel.fetchPublicHolidaysFromApi(year) { success, message ->
+            onFetchHolidays = { year:  String ->  // 🔥 타입 명시
+                viewModel. fetchPublicHolidaysFromApi(year) { success, message ->
                     snackbarMessage = message
                     showSnackbar = true
                 }
             },
-            onAddCustomDay = { holiday ->
+            onAddCustomDay = { holiday:  Holiday ->  // 🔥 타입 명시
                 viewModel.addCustomDay(holiday)
             },
-            onRemoveCustomDay = { date ->
-                viewModel. removeCustomDay(date)
+            onRemoveCustomDay = { date: String ->  // 🔥 타입 명시
+                viewModel.removeCustomDay(date)
             }
         )
     }

@@ -20,27 +20,28 @@ import com.example.ddayapp.utils.DateCalculator
 
 @Composable
 fun DdayCard(
-    dday:  DDay,
-    publicHolidays: Set<String>,  // 🔥 외부에서 받기
-    customDays: Set<String>,      // 🔥 외부에서 받기
+    dday: DDay,
+    publicHolidays: Set<String>,
+    customDays: Set<String>,
     onEdit: () -> Unit,
+    onDuplicate: () -> Unit,  // 🔥 복제 콜백 추가
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
-    val cardColor = dday. color. toComposeColor()
+    val cardColor = dday.color. toComposeColor()
 
-    val ddayText = DateCalculator. calculateDDay(
+    val ddayText = DateCalculator.calculateDDay(
         targetDate = dday.date,
         excludePublicHolidays = dday.excludePublicHolidays,
-        excludeCustomDays = dday. excludeCustomDays,
-        excludeWeekends = dday.excludeWeekends,
-        publicHolidays = publicHolidays,  // 🔥 실시간 데이터 사용
-        customDays = customDays           // 🔥 실시간 데이터 사용
+        excludeCustomDays = dday.excludeCustomDays,
+        excludeWeekends = dday. excludeWeekends,
+        publicHolidays = publicHolidays,
+        customDays = customDays
     )
 
-    val formattedDate = DateCalculator. formatDate(dday.date)
+    val formattedDate = DateCalculator.formatDate(dday.date)
 
     Card(
         modifier = modifier. fillMaxWidth(),
@@ -52,8 +53,8 @@ fun DdayCard(
             /* 상단 컬러 바 */
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(36.dp)
+                    . fillMaxWidth()
+                    . height(36.dp)
                     .background(
                         cardColor,
                         RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
@@ -75,10 +76,10 @@ fun DdayCard(
                     Box {
                         IconButton(
                             onClick = { showMenu = true },
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier. size(20.dp)
                         ) {
                             Icon(
-                                imageVector = Icons.Default.MoreHoriz,
+                                imageVector = Icons.Default. MoreHoriz,
                                 contentDescription = "메뉴",
                                 tint = Color. White
                             )
@@ -93,6 +94,14 @@ fun DdayCard(
                                 onClick = {
                                     showMenu = false
                                     onEdit()
+                                }
+                            )
+                            // 🔥 복제 메뉴 추가
+                            DropdownMenuItem(
+                                text = { Text("복제") },
+                                onClick = {
+                                    showMenu = false
+                                    onDuplicate()
                                 }
                             )
                             DropdownMenuItem(
@@ -133,7 +142,7 @@ fun DdayCard(
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement. spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.CalendarToday,

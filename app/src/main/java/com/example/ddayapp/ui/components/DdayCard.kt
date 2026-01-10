@@ -33,10 +33,10 @@ fun DdayCard(
     val cardColor = dday.color. toComposeColor()
 
     val ddayText = DateCalculator.calculateDDay(
-        targetDate = dday.date,
+        targetDate = dday. date,
         excludePublicHolidays = dday.excludePublicHolidays,
         excludeCustomDays = dday.excludeCustomDays,
-        excludeWeekends = dday. excludeWeekends,
+        excludedWeekdays = dday.excludedWeekdays,  // 🔥 변경
         publicHolidays = publicHolidays,
         customDays = customDays
     )

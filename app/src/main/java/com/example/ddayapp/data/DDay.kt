@@ -7,7 +7,9 @@ data class DDay(
     val date: String,
     val color: String,
 
-    val excludePublicHolidays: Boolean,
+    val excludePublicHolidays:  Boolean,
     val excludeCustomDays: Boolean,
-    val excludedWeekdays: Set<Int> = emptySet()
+    val excludedWeekdays: Set<Int> = emptySet(),
+
+    val order: Int = 0
 )

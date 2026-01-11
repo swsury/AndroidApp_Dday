@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow. StateFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import com.example.ddayapp.widget.DdayWidgetReceiver
+
 
 class DdayViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -51,6 +53,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
 
         _ddays.value = currentList + newDDay
         prefsHelper.saveDDays(_ddays.value)
+        DdayWidgetReceiver.updateAllWidgets(getApplication())
     }
 
     /**
@@ -61,6 +64,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
             if (item.id == dday.id) dday else item
         }
         prefsHelper.saveDDays(_ddays.value)
+        DdayWidgetReceiver. updateAllWidgets(getApplication())
     }
 
     /**
@@ -69,6 +73,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
     fun deleteDDay(id: Long) {
         _ddays.value = _ddays.value. filter { it.id != id }
         prefsHelper.saveDDays(_ddays.value)
+        DdayWidgetReceiver.updateAllWidgets(getApplication())
     }
 
     /**

@@ -3,11 +3,12 @@ package com.example.ddayapp.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ddayapp. utils.HolidayApi
-import com.example.ddayapp. data.DDay
+import com.example.ddayapp.utils.HolidayApi
+import com.example.ddayapp.data.DDay
 import com.example.ddayapp.data.Holiday
 import com.example.ddayapp.data.PrefsHelper
 import com.example.ddayapp.data.Settings
+import com.example.ddayapp.widget.DdayWidgetProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow. StateFlow
 import kotlinx.coroutines.launch
@@ -16,6 +17,7 @@ import java.util.Calendar
 class DdayViewModel(application: Application) : AndroidViewModel(application) {
 
     private val prefsHelper = PrefsHelper(application)
+    private val context = application
 
     private val _ddays = MutableStateFlow<List<DDay>>(emptyList())
     val ddays: StateFlow<List<DDay>> = _ddays
@@ -51,6 +53,9 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
 
         _ddays.value = currentList + newDDay
         prefsHelper.saveDDays(_ddays.value)
+
+        // 위젯 업데이트
+        DdayWidgetProvider. updateAllWidgets(context)
     }
 
     /**
@@ -61,6 +66,9 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
             if (item.id == dday.id) dday else item
         }
         prefsHelper.saveDDays(_ddays.value)
+
+        // 위젯 업데이트
+        DdayWidgetProvider.updateAllWidgets(context)
     }
 
     /**
@@ -69,6 +77,9 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
     fun deleteDDay(id: Long) {
         _ddays.value = _ddays.value. filter { it.id != id }
         prefsHelper.saveDDays(_ddays.value)
+
+        // 위젯 업데이트
+        DdayWidgetProvider.updateAllWidgets(context)
     }
 
     /**
@@ -93,6 +104,9 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
 
         _ddays.value = reorderedList
         prefsHelper.saveDDays(_ddays.value)
+
+        // 위젯 업데이트
+        DdayWidgetProvider.updateAllWidgets(context)
     }
 
     /**
@@ -101,6 +115,9 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
     fun updateSettings(settings: Settings) {
         _settings.value = settings
         prefsHelper.saveSettings(settings)
+
+        // 위젯 업데이트 (설정 변경 시)
+        DdayWidgetProvider.updateAllWidgets(context)
     }
 
     /**

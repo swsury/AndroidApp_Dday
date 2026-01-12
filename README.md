@@ -49,31 +49,31 @@
 
 ```
 app/src/main/java/com/example/ddayapp/
-├── MainActivity.kt              # 메인 액티비티
+├── MainActivity.kt                      # 메인 액티비티
 ├── data/
-│   ├── DDay.kt                 # D-day 데이터 모델
-│   ├── Holiday.kt              # 공휴일 데이터 모델
-│   └── PrefsHelper.kt          # 자동 새로고침 모델
-│   └── Settings.kt             # 설정 데이터 모델
+│   ├── DDay.kt                          # D-day 데이터 모델
+│   ├── Holiday.kt                       # 공휴일 데이터 모델
+│   └── PrefsHelper.kt                   # 자동 새로고침 모델
+│   └── Settings.kt                      # 설정 데이터 모델
 ├── ui/
-│   ├── DdayScreen.kt           # 메인 화면
+│   ├── DdayScreen.kt                    # 메인 화면
 │   ├── components/
-│   │   ├── DdayCard.kt         # D-day 카드 컴포넌트
-│   │   ├── AddEditDialog.kt    # 추가/편집 다이얼로그
-│   │   └── SettingsDialog.kt   # 설정 다이얼로그
+│   │   ├── DdayCard.kt                  # D-day 카드 컴포넌트
+│   │   ├── AddEditDialog.kt             # 추가/편집 다이얼로그
+│   │   └── SettingsDialog.kt            # 설정 다이얼로그
 │   └── theme/
-│       ├── Color.kt            # 색상 정의
-│       ├── Theme.kt            # 테마 설정
-│       └── Type.kt             # 타이포그래피
+│       ├── Color.kt                     # 색상 정의
+│       ├── Theme.kt                     # 테마 설정
+│       └── Type.kt                      # 타이포그래피
 ├── utils/
-│   ├── DateCalculator.kt       # 날짜 계산 로직
-│   ├── HolidayApi.kt           # 공휴일 API
-│   └── PreferencesHelper.kt    # 데이터 저장
+│   ├── DateCalculator.kt                # 날짜 계산 로직
+│   ├── HolidayApi.kt                    # 공휴일 API
+│   └── PreferencesHelper.kt             # 데이터 저장
 ├── viewmodel/
-│   └── DdayViewModel.kt        # ViewModel
+│   └── DdayViewModel.kt                 # ViewModel
 └── widget/
-    ├── DdayWidgetConfigActivity.kt # Widget 액티비티
-    └── DdayWidgetProvider.kt # Widget 실행
+    ├── DdayWidgetConfigActivity.kt      # Widget 액티비티
+    └── DdayWidgetProvider.kt            # Widget 실행
 
 ```
 

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">D-day</string>
+    <string name="widget_description">홈 화면에 D-day를 표시합니다</string>
 </resources>

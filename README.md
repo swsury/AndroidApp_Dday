@@ -53,6 +53,7 @@ app/src/main/java/com/example/ddayapp/
 ├── data/
 │   ├── DDay.kt                 # D-day 데이터 모델
 │   ├── Holiday.kt              # 공휴일 데이터 모델
+│   └── PrefsHelper.kt          # 자동 새로고침 모델
 │   └── Settings.kt             # 설정 데이터 모델
 ├── ui/
 │   ├── DdayScreen.kt           # 메인 화면
@@ -68,8 +69,11 @@ app/src/main/java/com/example/ddayapp/
 │   ├── DateCalculator.kt       # 날짜 계산 로직
 │   ├── HolidayApi.kt           # 공휴일 API
 │   └── PreferencesHelper.kt    # 데이터 저장
-└── viewmodel/
-    └── DdayViewModel.kt        # ViewModel
+├── viewmodel/
+│   └── DdayViewModel.kt        # ViewModel
+└── widget/
+    ├── DdayWidgetConfigActivity.kt # Widget 액티비티
+    └── DdayWidgetProvider.kt # Widget 실행
 
 ```
 

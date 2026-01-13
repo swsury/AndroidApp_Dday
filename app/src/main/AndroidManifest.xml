@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DdayApp"
         tools:targetApi="31">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -22,6 +23,127 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- 스타일 1 Config Activity (3x2) -->
+        <activity
+            android:name=".widget.DdayStyle1WidgetConfigActivity"
+            android:exported="true"
+            android:theme="@style/Theme.DdayApp"
+            android:taskAffinity="">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <!-- 스타일 2 Config Activity (3x3) -->
+        <activity
+            android:name=".widget.DdayStyle2WidgetConfigActivity"
+            android:exported="true"
+            android:theme="@style/Theme.DdayApp"
+            android:taskAffinity="">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <!-- 스타일 3 Config Activity (4x1) -->
+        <activity
+            android:name=".widget.DdayStyle3WidgetConfigActivity"
+            android:exported="true"
+            android:theme="@style/Theme.DdayApp"
+            android:taskAffinity="">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <!-- 스타일 4 Config Activity (2x2) -->
+        <activity
+            android:name=".widget.DdayStyle4WidgetConfigActivity"
+            android:exported="true"
+            android:theme="@style/Theme.DdayApp"
+            android:taskAffinity="">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <!-- 미니 위젯 Config Activity (1x1) -->
+        <activity
+            android:name=".widget.DdayMiniWidgetConfigActivity"
+            android:exported="true"
+            android:theme="@style/Theme.DdayApp"
+            android:taskAffinity="">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <!-- 스타일 1 Provider (3x2) -->
+        <receiver
+            android:name=".widget.DdayStyle1WidgetProvider"
+            android:exported="true"
+            android:label="D-day 기본 (3x2)">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/dday_style1_widget_info" />
+        </receiver>
+
+        <!-- 스타일 2 Provider (3x3) -->
+        <receiver
+            android:name=".widget.DdayStyle2WidgetProvider"
+            android:exported="true"
+            android:label="D-day 대형 (3x3)">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/dday_style2_widget_info" />
+        </receiver>
+
+        <!-- 스타일 3 Provider (4x1) -->
+        <receiver
+            android:name=".widget.DdayStyle3WidgetProvider"
+            android:exported="true"
+            android:label="D-day 가로형 (4x1)">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/dday_style3_widget_info" />
+        </receiver>
+
+        <!-- 스타일 4 Provider (2x2) -->
+        <receiver
+            android:name=".widget.DdayStyle4WidgetProvider"
+            android:exported="true"
+            android:label="D-day 미니멀 (2x2)">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/dday_style4_widget_info" />
+        </receiver>
+
+        <!-- 미니 위젯 Provider (1x1) -->
+        <receiver
+            android:name=".widget.DdayMiniWidgetProvider"
+            android:exported="true"
+            android:label="D-day 미니 (1x1)">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/dday_mini_widget_info" />
+        </receiver>
+
     </application>
 
 </manifest>

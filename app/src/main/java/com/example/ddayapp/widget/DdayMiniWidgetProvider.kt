@@ -10,14 +10,15 @@ import android.widget.RemoteViews
 import com.example.ddayapp.MainActivity
 import com.example.ddayapp.R
 import com.example.ddayapp.data.PrefsHelper
-import com.example.ddayapp.utils.DateCalculator
+import com.example. ddayapp.utils.DateCalculator
 import android.graphics.Color
 import android.util.Log
 
-class DdayWidgetProvider :  AppWidgetProvider() {
+
+class DdayMiniWidgetProvider : AppWidgetProvider() {
 
     companion object {
-        private const val TAG = "DdayWidgetProvider"
+        private const val TAG = "DdayMiniWidget"
 
         fun updateAppWidget(
             context: Context,
@@ -26,34 +27,19 @@ class DdayWidgetProvider :  AppWidgetProvider() {
         ) {
             try {
                 val prefsHelper = PrefsHelper(context)
-                val widgetPrefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
+                val widgetPrefs = context. getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
 
-                // 위젯에 설정된 D-day ID와 스타일 가져오기
-                val ddayId = widgetPrefs. getLong("widget_${appWidgetId}_dday_id", -1L)
-                val style = widgetPrefs.getInt("widget_${appWidgetId}_style", 1)
+                // 위젯에 설정된 D-day ID 가져오기
+                val ddayId = widgetPrefs. getLong("widget_mini_${appWidgetId}_dday_id", -1L)
 
-                // 스타일에 따른 레이아웃 선택
-                val layoutId = when (style) {
-                    1 -> R.layout.widget_dday_style1
-                    2 -> R.layout.widget_dday_style2
-                    3 -> R.layout.widget_dday_style3
-                    4 -> R.layout. widget_dday_style4
-                    else -> R.layout. widget_dday_style1
-                }
-
-                val views = RemoteViews(context. packageName, layoutId)
+                val views = RemoteViews(context.packageName, R.layout. widget_dday_mini)
 
                 if (ddayId != -1L) {
-                    // D-day 데이터 로드
                     val ddays = prefsHelper.loadDDays()
                     val dday = ddays.find { it.id == ddayId }
                     val settings = prefsHelper.loadSettings()
 
                     if (dday != null) {
-                        // D-day 정보 표시
-                        views.setTextViewText(R.id. widget_label, dday.labelTitle)
-                        views.setTextViewText(R.id.widget_title, dday.title)
-
                         // D-day 계산
                         val publicHolidays = settings.publicHolidays.map { it.date }. toSet()
                         val customDays = settings.customDays.map { it.date }.toSet()
@@ -68,23 +54,23 @@ class DdayWidgetProvider :  AppWidgetProvider() {
                         )
 
                         views.setTextViewText(R. id.widget_dday, ddayText)
-                        views.setTextViewText(R. id.widget_date, dday.date)
+                        views. setTextViewText(R.id.widget_title, dday.title)
 
                         // 배경 색상 설정
                         try {
-                            val color = Color. parseColor(dday.color)
-                            views.setInt(R.id.widget_background, "setBackgroundColor", color)
-                        } catch (e:  Exception) {
-                            Log. e(TAG, "Failed to parse color: ${dday.color}", e)
+                            val color = Color.parseColor(dday.color)
+                            views. setInt(R.id.widget_background, "setBackgroundColor", color)
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Failed to parse color: ${dday.color}", e)
                             views.setInt(R.id.widget_background, "setBackgroundColor", Color.parseColor("#24a19c"))
                         }
                     } else {
-                        // D-day가 삭제된 경우
-                        setDefaultWidgetContent(views, "D-day가 삭제되었습니다", "위젯을 재설정해주세요", style)
+                        views.setTextViewText(R. id.widget_dday, "")
+                        views.setTextViewText(R.id.widget_title, "삭제됨")
                     }
                 } else {
-                    // 위젯 설정이 안된 경우
-                    setDefaultWidgetContent(views, "D-day 위젯", "위젯을 설정해주세요", style)
+                    views.setTextViewText(R.id.widget_dday, "")
+                    views. setTextViewText(R.id.widget_title, "설정")
                 }
 
                 // 클릭 시 앱 열기
@@ -97,48 +83,32 @@ class DdayWidgetProvider :  AppWidgetProvider() {
                 )
                 views.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
 
-                // 위젯 업데이트
                 appWidgetManager.updateAppWidget(appWidgetId, views)
 
-            } catch (e: Exception) {
+            } catch (e:  Exception) {
                 Log.e(TAG, "Failed to update widget $appWidgetId", e)
             }
         }
 
-        private fun setDefaultWidgetContent(views: RemoteViews, title: String, subtitle: String, style: Int) {
-            views.setTextViewText(R.id.widget_title, title)
-            views.setTextViewText(R.id. widget_dday, "")
-            views.setInt(R.id.widget_background, "setBackgroundColor", Color.parseColor("#24a19c"))
-
-            // 스타일 4는 라벨과 날짜가 숨겨져 있음
-            if (style != 4) {
-                views. setTextViewText(R.id.widget_label, "D-day")
-                views.setTextViewText(R.id.widget_date, subtitle)
-            }
-        }
-
-        /**
-         * 모든 위젯 업데이트
-         */
         fun updateAllWidgets(context: Context) {
             try {
                 val appWidgetManager = AppWidgetManager.getInstance(context)
                 val appWidgetIds = appWidgetManager.getAppWidgetIds(
-                    ComponentName(context, DdayWidgetProvider::class. java)
+                    ComponentName(context, DdayMiniWidgetProvider::class. java)
                 )
                 appWidgetIds.forEach { appWidgetId ->
                     updateAppWidget(context, appWidgetManager, appWidgetId)
                 }
-            } catch (e: Exception) {
-                Log. e(TAG, "Failed to update all widgets", e)
+            } catch (e:  Exception) {
+                Log.e(TAG, "Failed to update all widgets", e)
             }
         }
     }
 
     override fun onUpdate(
-        context: Context,
+        context:  Context,
         appWidgetManager: AppWidgetManager,
-        appWidgetIds:  IntArray
+        appWidgetIds: IntArray
     ) {
         appWidgetIds.forEach { appWidgetId ->
             updateAppWidget(context, appWidgetManager, appWidgetId)
@@ -146,23 +116,21 @@ class DdayWidgetProvider :  AppWidgetProvider() {
     }
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
-        // 위젯 삭제 시 설정 정보도 삭제
-        val widgetPrefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
+        val widgetPrefs = context. getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
         val editor = widgetPrefs.edit()
         appWidgetIds.forEach { appWidgetId ->
-            editor.remove("widget_${appWidgetId}_dday_id")
-            editor.remove("widget_${appWidgetId}_style")
+            editor. remove("widget_mini_${appWidgetId}_dday_id")
         }
         editor.apply()
     }
 
-    override fun onEnabled(context:  Context) {
+    override fun onEnabled(context: Context) {
         super.onEnabled(context)
-        Log.d(TAG, "Widget enabled")
+        Log.d(TAG, "Mini Widget enabled")
     }
 
-    override fun onDisabled(context: Context) {
+    override fun onDisabled(context:  Context) {
         super.onDisabled(context)
-        Log.d(TAG, "Widget disabled")
+        Log.d(TAG, "Mini Widget disabled")
     }
 }

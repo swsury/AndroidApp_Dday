@@ -4,7 +4,7 @@ import androidx.compose.foundation. gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation. lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material. icons.Icons
+import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -13,13 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose. ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit. sp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.ddayapp. data.DDay
-import com. example.ddayapp.ui.components.*
+import com.example.ddayapp.data.DDay
+import com.example.ddayapp.ui.components.*
 import com.example.ddayapp.ui.theme.BackgroundGray
 import com.example.ddayapp.viewmodel.DdayViewModel
 

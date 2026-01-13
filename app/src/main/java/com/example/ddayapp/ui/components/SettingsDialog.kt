@@ -29,7 +29,6 @@ fun SettingsDialog(
     isLoadingHolidays: Boolean,
     onDismiss: () -> Unit,
     onSave: (Settings) -> Unit,
-    onFetchHolidays: (String) -> Unit,
     onAddCustomDay: (Holiday) -> Unit,
     onRemoveCustomDay: (String) -> Unit
 ) {
@@ -38,11 +37,6 @@ fun SettingsDialog(
     var sabbathDay by remember { mutableStateOf<String?>(settings.sabbathDay) }  // 🔥 타입 명시
     var newCustomDate by remember { mutableStateOf("") }
     var newCustomName by remember { mutableStateOf("") }
-    var selectedYear by remember {
-        mutableStateOf(
-            Calendar.getInstance().get(Calendar.YEAR).toString()
-        )
-    }
     var showDatePicker by remember { mutableStateOf(false) }
 
     // 🔥 각 스크롤 영역마다 별도의 ScrollState
@@ -104,7 +98,7 @@ fun SettingsDialog(
                     Text(
                         text = "공휴일 (자동)",
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight. Bold,
                         color = Color(0xFF24a19c)
                     )
 
@@ -115,65 +109,29 @@ fun SettingsDialog(
                         modifier = Modifier. padding(top = 4.dp, bottom = 12.dp)
                     )
 
-                    // 연도 선택 및 가져오기
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        OutlinedTextField(
-                            value = selectedYear,
-                            onValueChange = { input ->
-                                if (input. length <= 4 && input.all { char -> char.isDigit() }) {
-                                    selectedYear = input
-                                }
-                            },
-                            modifier = Modifier.weight(1f),
-                            label = { Text("연도", fontSize = 14.sp) },
-                            placeholder = { Text("2026", fontSize = 14.sp) },
-                            singleLine = true,
-                            shape = RoundedCornerShape(8.dp)
-                        )
-
-                        Button(
-                            onClick = {
-                                if (selectedYear.length == 4) {
-                                    onFetchHolidays(selectedYear)
-                                }
-                            },
-                            enabled = !isLoadingHolidays && selectedYear.length == 4,
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF24a19c)
-                            ),
-                            shape = RoundedCornerShape(8.dp)
-                        ) {
-                            if (isLoadingHolidays) {
-                                CircularProgressIndicator(
-                                    modifier = Modifier.size(16.dp),
-                                    color = Color.White,
-                                    strokeWidth = 2.dp
-                                )
-                            } else {
-                                Text("가져오기", fontSize = 14.sp)
-                            }
-                        }
-                    }
-
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // 공휴일 목록
-                    if (publicHolidays.isEmpty()) {
+                    if (publicHolidays. isEmpty()) {
                         Box(
                             modifier = Modifier
-                                .fillMaxWidth()
+                                . fillMaxWidth()
                                 .padding(vertical = 16.dp),
-                            contentAlignment = Alignment.Center
+                            contentAlignment = Alignment. Center
                         ) {
-                            Text(
-                                text = "불러온 공휴일이 없습니다",
-                                fontSize = 14.sp,
-                                color = Color(0xFFBDBDBD)
-                            )
+                            if (isLoadingHolidays) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(24.dp),
+                                    color = Color(0xFF24a19c),
+                                    strokeWidth = 2.dp
+                                )
+                            } else {
+                                Text(
+                                    text = "불러온 공휴일이 없습니다",
+                                    fontSize = 14.sp,
+                                    color = Color(0xFFBDBDBD)
+                                )
+                            }
                         }
                     } else {
                         // 총 개수 표시
@@ -197,25 +155,24 @@ fun SettingsDialog(
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .verticalScroll(publicHolidaysScrollState)  // 🔥 별도의 ScrollState
+                                    .verticalScroll(publicHolidaysScrollState)
                                     .padding(12.dp),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 publicHolidays
-                                    . filter { holiday -> holiday.date.isNotBlank() }  // 🔥 명시적 파라미터
-                                    .forEach { holiday ->  // 🔥 명시적 파라미터
-                                        val displayDate =
-                                            DateCalculator. formatDisplayDate(holiday.date)
+                                    . filter { holiday -> holiday.date. isNotBlank() }
+                                    .forEach { holiday ->
+                                        val displayDate = DateCalculator. formatDisplayDate(holiday.date)
 
                                         Row(
                                             modifier = Modifier
-                                                .fillMaxWidth()
-                                                .background(
+                                                . fillMaxWidth()
+                                                . background(
                                                     color = Color.White,
                                                     shape = RoundedCornerShape(6.dp)
                                                 )
                                                 .padding(12.dp),
-                                            horizontalArrangement = Arrangement. SpaceBetween,
+                                            horizontalArrangement = Arrangement.SpaceBetween,
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
                                             Column {

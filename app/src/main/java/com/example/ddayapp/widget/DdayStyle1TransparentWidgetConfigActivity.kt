@@ -9,12 +9,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.example.ddayapp.ui.theme.DdayAppTheme
 
-class DdayStyle2TransparentWidgetConfigActivity : ComponentActivity() {
+class DdayStyle1TransparentWidgetConfigActivity : ComponentActivity() {
 
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
     
     companion object {
-        private const val TAG = "Style2TransparentConfig"
+        private const val TAG = "Style1TransparentConfig"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +35,7 @@ class DdayStyle2TransparentWidgetConfigActivity : ComponentActivity() {
         setContent {
             DdayAppTheme {
                 WidgetConfigScreen(
-                    title = "3x1 가로형 컴팩트 위젯 투명",
+                    title = "1x1 미니 위젯 투명",
                     onDdaySelected = { ddayId ->
                         saveWidgetConfig(ddayId)
                         finishWithSuccess()
@@ -49,14 +49,14 @@ class DdayStyle2TransparentWidgetConfigActivity : ComponentActivity() {
     private fun saveWidgetConfig(ddayId: Long) {
         val prefs = getSharedPreferences("widget_prefs", MODE_PRIVATE)
         prefs.edit()
-            .putLong("widget_style2_transparent_${appWidgetId}_dday_id", ddayId)
+            .putLong("widget_style1_transparent_${appWidgetId}_dday_id", ddayId)
             .apply()
-        Log.d(TAG, "Saved: widget_style2_transparent_${appWidgetId}_dday_id = $ddayId")
+        Log.d(TAG, "Saved: widget_style1_transparent_${appWidgetId}_dday_id = $ddayId")
     }
 
     private fun finishWithSuccess() {
         val appWidgetManager = AppWidgetManager.getInstance(this)
-        DdayStyle2TransparentWidgetProvider.updateAppWidget(this, appWidgetManager, appWidgetId)
+        DdayStyle1TransparentWidgetProvider.updateAppWidget(this, appWidgetManager, appWidgetId)
 
         val resultValue = Intent().apply {
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)

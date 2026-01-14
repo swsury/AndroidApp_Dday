@@ -35,7 +35,7 @@ class DdayStyle3TransparentWidgetConfigActivity : ComponentActivity() {
         setContent {
             DdayAppTheme {
                 WidgetConfigScreen(
-                    title = "투명 가로형 위젯 (3x1)",
+                    title = "2x2 미니멀 위젯 투명",
                     onDdaySelected = { ddayId ->
                         saveWidgetConfig(ddayId)
                         finishWithSuccess()

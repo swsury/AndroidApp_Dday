@@ -13,10 +13,10 @@ import com.example.ddayapp.data.PrefsHelper
 import com.example.ddayapp.utils.DateCalculator
 import android.util.Log
 
-class DdayStyle3TransparentWidgetProvider : AppWidgetProvider() {
+class DdayStyle1TransparentWidgetProvider : AppWidgetProvider() {
 
     companion object {
-        private const val TAG = "Style3TransparentWidget"
+        private const val TAG = "Style1TransparentWidget"
         
         fun updateAppWidget(
             context: Context,
@@ -27,8 +27,8 @@ class DdayStyle3TransparentWidgetProvider : AppWidgetProvider() {
                 val prefsHelper = PrefsHelper(context)
                 val widgetPrefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
                 
-                val ddayId = widgetPrefs.getLong("widget_style3_transparent_${appWidgetId}_dday_id", -1L)
-                val views = RemoteViews(context.packageName, R.layout.widget_dday_style3_transparent)
+                val ddayId = widgetPrefs.getLong("widget_style1_transparent_${appWidgetId}_dday_id", -1L)
+                val views = RemoteViews(context.packageName, R.layout.widget_dday_style1_transparent)
                 
                 if (ddayId != -1L) {
                     val ddays = prefsHelper.loadDDays()
@@ -48,8 +48,10 @@ class DdayStyle3TransparentWidgetProvider : AppWidgetProvider() {
                             customDays = customDays
                         )
                         
-                        views.setTextViewText(R.id.widget_dday, ddayText)
+                        views.setTextViewText(R.id.widget_label, dday.labelTitle)
                         views.setTextViewText(R.id.widget_title, dday.title)
+                        views.setTextViewText(R.id.widget_dday, ddayText)
+                        views.setTextViewText(R.id.widget_date, dday.date)
                     } else {
                         setDefaultContent(views)
                     }
@@ -72,15 +74,17 @@ class DdayStyle3TransparentWidgetProvider : AppWidgetProvider() {
         }
         
         private fun setDefaultContent(views: RemoteViews) {
-            views.setTextViewText(R.id.widget_dday, "")
+            views.setTextViewText(R.id.widget_label, "D-day")
             views.setTextViewText(R.id.widget_title, "위젯 설정")
+            views.setTextViewText(R.id.widget_dday, "")
+            views.setTextViewText(R.id.widget_date, "터치하여 설정")
         }
         
         fun updateAllWidgets(context: Context) {
             try {
                 val appWidgetManager = AppWidgetManager.getInstance(context)
                 val appWidgetIds = appWidgetManager.getAppWidgetIds(
-                    ComponentName(context, DdayStyle3TransparentWidgetProvider::class.java)
+                    ComponentName(context, DdayStyle1TransparentWidgetProvider::class.java)
                 )
                 appWidgetIds.forEach { updateAppWidget(context, appWidgetManager, it) }
             } catch (e: Exception) {
@@ -96,7 +100,7 @@ class DdayStyle3TransparentWidgetProvider : AppWidgetProvider() {
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         val widgetPrefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
         val editor = widgetPrefs.edit()
-        appWidgetIds.forEach { editor.remove("widget_style3_transparent_${it}_dday_id") }
+        appWidgetIds.forEach { editor.remove("widget_style1_transparent_${it}_dday_id") }
         editor.apply()
     }
 }

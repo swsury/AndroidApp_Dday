@@ -9,34 +9,50 @@
         android:id="@+id/widget_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:background="@android:color/transparent"
-        android:padding="10dp"
-        android:gravity="center">
+        android:padding="16dp"
+        android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/widget_label"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:text="D-day"
-            android:textColor="#24a19c"
-            android:textSize="9sp"
-            android:textStyle="bold"
-            android:alpha="0.9"
-            android:layout_marginBottom="4dp" />
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/widget_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="제목"
-            android:textColor="#24a19c"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:layout_marginBottom="12dp" />
+            <TextView
+                android:id="@+id/widget_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:alpha="0.9"
+                android:text="D-day"
+                android:textColor="#24a19c"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/widget_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="제목"
+                android:textColor="#24a19c"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/widget_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.8"
+                android:text="2026-02-12"
+                android:textColor="#24a19c"
+                android:textSize="11sp" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/widget_dday"
@@ -44,18 +60,9 @@
             android:layout_height="wrap_content"
             android:text="D-30"
             android:textColor="#24a19c"
-            android:textSize="36sp"
+            android:textSize="32sp"
             android:textStyle="bold"
-            android:layout_marginBottom="4dp" />
-
-        <TextView
-            android:id="@+id/widget_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2026-02-12"
-            android:textColor="#24a19c"
-            android:textSize="10sp"
-            android:alpha="0.8" />
+            android:layout_marginStart="16dp" />
 
     </LinearLayout>
 

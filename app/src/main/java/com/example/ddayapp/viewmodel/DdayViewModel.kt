@@ -55,9 +55,12 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         prefsHelper.saveDDays(_ddays.value)
 
         // 위젯 업데이트
-        DdayStyle1WidgetProvider. updateAllWidgets(context)
+        DdayStyle1WidgetProvider.updateAllWidgets(context)
+        DdayStyle1WidgetProvider.updateAllWidgets(context)
         DdayStyle2WidgetProvider.updateAllWidgets(context)
-        DdayStyle3WidgetProvider.updateAllWidgets(context)
+        DdayStyle1TransparentWidgetProvider.updateAllWidgets(context)
+        DdayStyle2TransparentWidgetProvider.updateAllWidgets(context)
+        DdayStyle3TransparentWidgetProvider.updateAllWidgets(context)
     }
 
     /**
@@ -70,9 +73,12 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         prefsHelper.saveDDays(_ddays.value)
 
         // 위젯 업데이트
-        DdayStyle1WidgetProvider. updateAllWidgets(context)
+        DdayStyle1WidgetProvider.updateAllWidgets(context)
+        DdayStyle1WidgetProvider.updateAllWidgets(context)
         DdayStyle2WidgetProvider.updateAllWidgets(context)
-        DdayStyle3WidgetProvider.updateAllWidgets(context)
+        DdayStyle1TransparentWidgetProvider.updateAllWidgets(context)
+        DdayStyle2TransparentWidgetProvider.updateAllWidgets(context)
+        DdayStyle3TransparentWidgetProvider.updateAllWidgets(context)
     }
 
     /**
@@ -83,9 +89,12 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         prefsHelper.saveDDays(_ddays.value)
 
         // 위젯 업데이트
-        DdayStyle1WidgetProvider. updateAllWidgets(context)
+        DdayStyle1WidgetProvider.updateAllWidgets(context)
+        DdayStyle1WidgetProvider.updateAllWidgets(context)
         DdayStyle2WidgetProvider.updateAllWidgets(context)
-        DdayStyle3WidgetProvider.updateAllWidgets(context)
+        DdayStyle1TransparentWidgetProvider.updateAllWidgets(context)
+        DdayStyle2TransparentWidgetProvider.updateAllWidgets(context)
+        DdayStyle3TransparentWidgetProvider.updateAllWidgets(context)
     }
 
     /**
@@ -105,16 +114,19 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
 
         // order 재설정
         val reorderedList = currentList.mapIndexed { index, ddayItem ->
-            ddayItem. copy(order = index)
+            ddayItem.copy(order = index)
         }
 
         _ddays.value = reorderedList
         prefsHelper.saveDDays(_ddays.value)
 
         // 위젯 업데이트
-        DdayStyle1WidgetProvider. updateAllWidgets(context)
+        DdayStyle1WidgetProvider.updateAllWidgets(context)
+        DdayStyle1WidgetProvider.updateAllWidgets(context)
         DdayStyle2WidgetProvider.updateAllWidgets(context)
-        DdayStyle3WidgetProvider.updateAllWidgets(context)
+        DdayStyle1TransparentWidgetProvider.updateAllWidgets(context)
+        DdayStyle2TransparentWidgetProvider.updateAllWidgets(context)
+        DdayStyle3TransparentWidgetProvider.updateAllWidgets(context)
     }
 
     /**
@@ -125,9 +137,12 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         prefsHelper.saveSettings(settings)
 
         // 위젯 업데이트 (설정 변경 시)
-        DdayStyle1WidgetProvider. updateAllWidgets(context)
+        DdayStyle1WidgetProvider.updateAllWidgets(context)
+        DdayStyle1WidgetProvider.updateAllWidgets(context)
         DdayStyle2WidgetProvider.updateAllWidgets(context)
-        DdayStyle3WidgetProvider.updateAllWidgets(context)
+        DdayStyle1TransparentWidgetProvider.updateAllWidgets(context)
+        DdayStyle2TransparentWidgetProvider.updateAllWidgets(context)
+        DdayStyle3TransparentWidgetProvider.updateAllWidgets(context)
     }
 
     /**
@@ -204,7 +219,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
 
                 val mergedHolidays = (otherYearHolidays + newHolidays)
                     .distinctBy { holiday: Holiday -> holiday.date }
-                    . sortedBy { holiday: Holiday -> holiday.date }
+                    .sortedBy { holiday: Holiday -> holiday.date }
 
                 val newSettings = currentSettings.copy(publicHolidays = mergedHolidays)
                 updateSettings(newSettings)
@@ -213,7 +228,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             result.onFailure { exception:  Throwable ->
-                onComplete?. invoke(false, "공휴일 정보를 가져오는데 실패했습니다:  ${exception.message}")
+                onComplete?.invoke(false, "공휴일 정보를 가져오는데 실패했습니다:  ${exception.message}")
             }
 
             _isLoadingHolidays.value = false

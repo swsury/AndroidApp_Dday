@@ -9,33 +9,33 @@
         android:id="@+id/widget_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/widget_background_style1"
-        android:gravity="center"
         android:orientation="vertical"
-        android:padding="6dp">
+        android:background="@android:color/transparent"
+        android:padding="6dp"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/widget_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
+            android:text="제목"
+            android:textColor="#24a19c"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:maxLines="2"
             android:ellipsize="end"
             android:gravity="center"
-            android:maxLines="2"
-            android:text="제목"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            android:layout_marginBottom="12dp" />
 
         <TextView
             android:id="@+id/widget_dday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
             android:text="D-30"
-            android:textColor="#FFFFFF"
+            android:textColor="#24a19c"
             android:textSize="36sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
 
 
     </LinearLayout>

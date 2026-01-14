@@ -1,4 +1,4 @@
-package com. example.ddayapp.widget
+package com.example.ddayapp.widget
 
 import android.app.Activity
 import android.appwidget.AppWidgetManager
@@ -17,12 +17,12 @@ class DdayStyle3WidgetConfigActivity : ComponentActivity() {
         private const val TAG = "Style3WidgetConfig"
     }
 
-    override fun onCreate(savedInstanceState:  Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        setResult(Activity.RESULT_CANCELED)
+        setResult(Activity. RESULT_CANCELED)
 
-        appWidgetId = intent?.extras?.getInt(
+        appWidgetId = intent?.extras?. getInt(
             AppWidgetManager.EXTRA_APPWIDGET_ID,
             AppWidgetManager.INVALID_APPWIDGET_ID
         ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
@@ -35,7 +35,7 @@ class DdayStyle3WidgetConfigActivity : ComponentActivity() {
         setContent {
             DdayAppTheme {
                 WidgetConfigScreen(
-                    title = "스타일 3 위젯 설정 (4x1 가로형)",
+                    title = "2x2 미니멀 위젯",
                     onDdaySelected = { ddayId ->
                         saveWidgetConfig(ddayId)
                         finishWithSuccess()
@@ -61,7 +61,7 @@ class DdayStyle3WidgetConfigActivity : ComponentActivity() {
         val resultValue = Intent().apply {
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         }
-        setResult(Activity.RESULT_OK, resultValue)
+        setResult(Activity. RESULT_OK, resultValue)
         finish()
     }
 }

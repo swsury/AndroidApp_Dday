@@ -17,14 +17,14 @@ class DdayStyle1WidgetConfigActivity : ComponentActivity() {
         private const val TAG = "Style1WidgetConfig"
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState:  Bundle?) {
         super.onCreate(savedInstanceState)
         
         setResult(Activity.RESULT_CANCELED)
 
-        appWidgetId = intent?. extras?.getInt(
+        appWidgetId = intent?.extras?.getInt(
             AppWidgetManager.EXTRA_APPWIDGET_ID,
-            AppWidgetManager. INVALID_APPWIDGET_ID
+            AppWidgetManager.INVALID_APPWIDGET_ID
         ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
 
         if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
@@ -35,7 +35,7 @@ class DdayStyle1WidgetConfigActivity : ComponentActivity() {
         setContent {
             DdayAppTheme {
                 WidgetConfigScreen(
-                    title = "스타일 1 위젯 설정 (3x2)",
+                    title = "1x1 미니 위젯",
                     onDdaySelected = { ddayId ->
                         saveWidgetConfig(ddayId)
                         finishWithSuccess()
@@ -51,7 +51,7 @@ class DdayStyle1WidgetConfigActivity : ComponentActivity() {
         prefs.edit()
             .putLong("widget_style1_${appWidgetId}_dday_id", ddayId)
             .apply()
-        Log.d(TAG, "Saved:  widget_style1_${appWidgetId}_dday_id = $ddayId")
+        Log.d(TAG, "Saved: widget_style1_${appWidgetId}_dday_id = $ddayId")
     }
 
     private fun finishWithSuccess() {

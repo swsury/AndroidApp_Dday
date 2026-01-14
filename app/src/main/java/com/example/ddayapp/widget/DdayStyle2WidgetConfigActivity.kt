@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.example.ddayapp.ui.theme.DdayAppTheme
+import com.example.ddayapp.widget.WidgetConfigScreen
 
 class DdayStyle2WidgetConfigActivity : ComponentActivity() {
 
@@ -35,7 +36,7 @@ class DdayStyle2WidgetConfigActivity : ComponentActivity() {
         setContent {
             DdayAppTheme {
                 WidgetConfigScreen(
-                    title = "스타일 2 위젯 설정 (3x3 대형)",
+                    title = "3x1 가로형 컴팩트 위젯",
                     onDdaySelected = { ddayId ->
                         saveWidgetConfig(ddayId)
                         finishWithSuccess()

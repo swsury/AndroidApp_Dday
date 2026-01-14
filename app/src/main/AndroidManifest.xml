@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
 
-        <!-- 스타일 1 Config Activity (3x2) -->
+        <!-- 스타일 1 1x1 미니 위젯 -->
         <activity
             android:name=".widget.DdayStyle1WidgetConfigActivity"
             android:exported="true"
@@ -37,7 +37,7 @@
             </intent-filter>
         </activity>
 
-        <!-- 스타일 2 Config Activity (3x3) -->
+        <!-- 스타일 2 3x1 가로형 위젯 -->
         <activity
             android:name=".widget.DdayStyle2WidgetConfigActivity"
             android:exported="true"
@@ -48,7 +48,7 @@
             </intent-filter>
         </activity>
 
-        <!-- 스타일 3 Config Activity (4x1) -->
+        <!-- 스타일 3 2x2 기본 위젯  -->
         <activity
             android:name=".widget.DdayStyle3WidgetConfigActivity"
             android:exported="true"
@@ -59,9 +59,9 @@
             </intent-filter>
         </activity>
 
-        <!-- 스타일 4 Config Activity (2x2) -->
+        <!-- 스타일 1 1x1 미니 위젯 투명 -->
         <activity
-            android:name=".widget.DdayStyle4WidgetConfigActivity"
+            android:name=".widget.DdayStyle1TransparentWidgetConfigActivity"
             android:exported="true"
             android:theme="@style/Theme.DdayApp"
             android:taskAffinity="">
@@ -70,7 +70,7 @@
             </intent-filter>
         </activity>
 
-        <!-- 투명 스타일 2 Config Activity (1x1) -->
+        <!-- 스타일 2 3x1 가로형 위젯 투명 -->
         <activity
             android:name=".widget.DdayStyle2TransparentWidgetConfigActivity"
             android:exported="true"
@@ -81,7 +81,7 @@
             </intent-filter>
         </activity>
 
-        <!-- 투명 스타일 3 Config Activity (3x1) -->
+        <!-- 스타일 3 2x2 기본 위젯 투명 -->
         <activity
             android:name=".widget.DdayStyle3TransparentWidgetConfigActivity"
             android:exported="true"
@@ -92,22 +92,11 @@
             </intent-filter>
         </activity>
 
-        <!-- 투명 스타일 4 Config Activity (2x2) -->
-        <activity
-            android:name=".widget.DdayStyle4TransparentWidgetConfigActivity"
-            android:exported="true"
-            android:theme="@style/Theme.DdayApp"
-            android:taskAffinity="">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-
-        <!-- 스타일 1 Provider (3x2) -->
+        <!-- 스타일 1 1x1 미니 위젯 -->
         <receiver
             android:name=".widget.DdayStyle1WidgetProvider"
             android:exported="true"
-            android:label="D-day 기본 (3x2)">
+            android:label="D-day 미니 (1x1)">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -116,11 +105,11 @@
                 android:resource="@xml/dday_style1_widget_info" />
         </receiver>
 
-        <!-- 스타일 2 Provider (1x1) -->
+        <!-- 스타일 2 3x1 가로형 위젯  -->
         <receiver
             android:name=".widget.DdayStyle2WidgetProvider"
             android:exported="true"
-            android:label="D-day 미니 (1x1)">
+            android:label="D-day 가로형 (3x1)">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -129,11 +118,11 @@
                 android:resource="@xml/dday_style2_widget_info" />
         </receiver>
 
-        <!-- 스타일 3 Provider (4x1) -->
+        <!-- 스타일 3 2x2 기본 위젯  -->
         <receiver
             android:name=".widget.DdayStyle3WidgetProvider"
             android:exported="true"
-            android:label="D-day 가로형 (4x1)">
+            android:label="D-day 기본 (2x2)">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -142,24 +131,24 @@
                 android:resource="@xml/dday_style3_widget_info" />
         </receiver>
 
-        <!-- 스타일 4 Provider (2x2) -->
+        <!-- 스타일 1 1x1 미니 위젯 투명 -->
         <receiver
-            android:name=".widget.DdayStyle4WidgetProvider"
+            android:name=".widget.DdayStyle1TransparentWidgetProvider"
             android:exported="true"
-            android:label="D-day 미니멀 (2x2)">
+            android:label="D-day 미니 투명 (1x1)">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/dday_style4_widget_info" />
+                android:resource="@xml/dday_style1_transparent_widget_info" />
         </receiver>
 
-        <!-- 투명 스타일 2 Provider (1x1) -->
+        <!-- 스타일 2 3x1 가로형 위젯 투명 -->
         <receiver
             android:name=".widget.DdayStyle2TransparentWidgetProvider"
             android:exported="true"
-            android:label="D-day 투명 미니 (1x1)">
+            android:label="D-day 가로형 투명 (3x1)">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -168,30 +157,17 @@
                 android:resource="@xml/dday_style2_transparent_widget_info" />
         </receiver>
 
-        <!-- 투명 스타일 3 Provider (3x1) -->
+        <!-- 스타일 3 2x2 기본 위젯 투명 -->
         <receiver
             android:name=".widget.DdayStyle3TransparentWidgetProvider"
             android:exported="true"
-            android:label="D-day 투명 가로형 (3x1)">
+            android:label="D-day 기본 투명 (2x2)">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/dday_style3_transparent_widget_info" />
-        </receiver>
-
-        <!-- 투명 스타일 4 Provider (2x2) -->
-        <receiver
-            android:name=".widget.DdayStyle4TransparentWidgetProvider"
-            android:exported="true"
-            android:label="D-day 투명 (2x2)">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/dday_style4_transparent_widget_info" />
         </receiver>
 
     </application>

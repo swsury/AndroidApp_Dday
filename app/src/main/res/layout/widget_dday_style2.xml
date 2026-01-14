@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@drawable/widget_background_style2"
-        android:padding="16dp"
+        android:padding="10dp"
         android:gravity="center">
 
         <TextView
@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:text="D-day"
             android:textColor="#FFFFFF"
-            android:textSize="11sp"
+            android:textSize="9sp"
             android:textStyle="bold"
             android:alpha="0.9"
             android:layout_marginBottom="4dp" />
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:text="제목"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             android:maxLines="2"
             android:ellipsize="end"
@@ -44,9 +44,9 @@
             android:layout_height="wrap_content"
             android:text="D-30"
             android:textColor="#FFFFFF"
-            android:textSize="48sp"
+            android:textSize="36sp"
             android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="4dp" />
 
         <TextView
             android:id="@+id/widget_date"
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:text="2026-02-12"
             android:textColor="#FFFFFF"
-            android:textSize="14sp"
+            android:textSize="10sp"
             android:alpha="0.8" />
 
     </LinearLayout>

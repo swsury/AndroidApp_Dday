@@ -58,8 +58,6 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         DdayStyle1WidgetProvider. updateAllWidgets(context)
         DdayStyle2WidgetProvider.updateAllWidgets(context)
         DdayStyle3WidgetProvider.updateAllWidgets(context)
-        DdayStyle4WidgetProvider. updateAllWidgets(context)
-        DdayMiniWidgetProvider.updateAllWidgets(context)
     }
 
     /**
@@ -75,8 +73,6 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         DdayStyle1WidgetProvider. updateAllWidgets(context)
         DdayStyle2WidgetProvider.updateAllWidgets(context)
         DdayStyle3WidgetProvider.updateAllWidgets(context)
-        DdayStyle4WidgetProvider. updateAllWidgets(context)
-        DdayMiniWidgetProvider.updateAllWidgets(context)
     }
 
     /**
@@ -90,8 +86,6 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         DdayStyle1WidgetProvider. updateAllWidgets(context)
         DdayStyle2WidgetProvider.updateAllWidgets(context)
         DdayStyle3WidgetProvider.updateAllWidgets(context)
-        DdayStyle4WidgetProvider. updateAllWidgets(context)
-        DdayMiniWidgetProvider.updateAllWidgets(context)
     }
 
     /**
@@ -121,8 +115,6 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         DdayStyle1WidgetProvider. updateAllWidgets(context)
         DdayStyle2WidgetProvider.updateAllWidgets(context)
         DdayStyle3WidgetProvider.updateAllWidgets(context)
-        DdayStyle4WidgetProvider. updateAllWidgets(context)
-        DdayMiniWidgetProvider.updateAllWidgets(context)
     }
 
     /**
@@ -136,8 +128,6 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         DdayStyle1WidgetProvider. updateAllWidgets(context)
         DdayStyle2WidgetProvider.updateAllWidgets(context)
         DdayStyle3WidgetProvider.updateAllWidgets(context)
-        DdayStyle4WidgetProvider. updateAllWidgets(context)
-        DdayMiniWidgetProvider.updateAllWidgets(context)
     }
 
     /**

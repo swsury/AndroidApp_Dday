@@ -2,9 +2,7 @@
 <resources>
     <string name="app_name">며칠이지?</string>
     <string name="widget_description">홈 화면에 D-day를 표시합니다</string>
-    <string name="mini_widget_description">1x1 미니 위젯</string>
     <string name="widget_style1_description">3x2 기본 스타일 위젯</string>
-    <string name="widget_style2_description">3x3 대형 중앙 정렬 위젯</string>
-    <string name="widget_style3_description">4x1 가로형 컴팩트 위젯</string>
-    <string name="widget_style4_description">2x2 심플 위젯</string>
+    <string name="widget_style2_description">1x1 미니 위젯</string>
+    <string name="widget_style3_description">3x1 가로형 컴팩트 위젯</string>
 </resources>

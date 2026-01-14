@@ -10,7 +10,7 @@ import android.widget.RemoteViews
 import com.example.ddayapp.MainActivity
 import com.example.ddayapp.R
 import com.example.ddayapp.data.PrefsHelper
-import com. example.ddayapp.utils.DateCalculator
+import com.example.ddayapp.utils.DateCalculator
 import android.graphics.Color
 import android.util.Log
 

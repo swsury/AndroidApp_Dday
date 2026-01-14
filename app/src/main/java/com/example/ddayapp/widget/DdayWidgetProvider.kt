@@ -37,7 +37,6 @@ class DdayWidgetProvider :  AppWidgetProvider() {
                     1 -> R.layout.widget_dday_style1
                     2 -> R.layout.widget_dday_style2
                     3 -> R.layout.widget_dday_style3
-                    4 -> R.layout. widget_dday_style4
                     else -> R.layout. widget_dday_style1
                 }
 

@@ -38,9 +38,9 @@ class DdayStyle2WidgetProvider : AppWidgetProvider() {
 
                     if (dday != null) {
                         val publicHolidays = settings.publicHolidays.map { it.date }.toSet()
-                        val customDays = settings.customDays. map { it.date }.toSet()
+                        val customDays = settings.customDays.map { it.date }.toSet()
 
-                        val ddayText = DateCalculator. calculateDDay(
+                        val ddayText = DateCalculator.calculateDDay(
                             targetDate = dday.date,
                             excludePublicHolidays = dday.excludePublicHolidays,
                             excludeCustomDays = dday.excludeCustomDays,
@@ -49,8 +49,8 @@ class DdayStyle2WidgetProvider : AppWidgetProvider() {
                             customDays = customDays
                         )
 
-                        views.setTextViewText(R.id. widget_label, dday.labelTitle)
-                        views.setTextViewText(R.id. widget_title, dday.title)
+                        views.setTextViewText(R.id.widget_label, dday.labelTitle)
+                        views.setTextViewText(R.id.widget_title, dday.title)
                         views.setTextViewText(R.id.widget_dday, ddayText)
                         views.setTextViewText(R.id.widget_date, dday.date)
 
@@ -59,7 +59,7 @@ class DdayStyle2WidgetProvider : AppWidgetProvider() {
                             val color = Color.parseColor(dday.color)
                             views.setInt(R.id.widget_background, "setBackgroundColor", color)
                         } catch (e: Exception) {
-                            views.setInt(R.id. widget_background, "setBackgroundColor", Color.parseColor("#24a19c"))
+                            views.setInt(R.id.widget_background, "setBackgroundColor", Color.parseColor("#24a19c"))
                         }
 
                         // 🔥 위젯 클릭 시 해당 D-day 편집 화면 열기
@@ -72,7 +72,7 @@ class DdayStyle2WidgetProvider : AppWidgetProvider() {
                             context,
                             appWidgetId, // 고유한 requestCode 사용
                             intent,
-                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent. FLAG_IMMUTABLE
+                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                         )
                         views.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
 
@@ -101,15 +101,15 @@ class DdayStyle2WidgetProvider : AppWidgetProvider() {
             views.setTextViewText(R.id.widget_date, "터치하여 설정")
 
             // 기본 배경색
-            views.setInt(R. id.widget_background, "setBackgroundColor", Color.parseColor("#24a19c"))
+            views.setInt(R.id.widget_background, "setBackgroundColor", Color.parseColor("#24a19c"))
         }
 
         // 🔥 기본 클릭 시 메인 화면만 열기
         private fun setDefaultClickIntent(context: Context, views: RemoteViews, appWidgetId: Int) {
             val intent = Intent(context, MainActivity:: class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent. FLAG_ACTIVITY_CLEAR_TOP
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             }
-            val pendingIntent = PendingIntent. getActivity(
+            val pendingIntent = PendingIntent.getActivity(
                 context,
                 appWidgetId, // 고유한 requestCode
                 intent,
@@ -121,8 +121,8 @@ class DdayStyle2WidgetProvider : AppWidgetProvider() {
         fun updateAllWidgets(context: Context) {
             try {
                 val appWidgetManager = AppWidgetManager.getInstance(context)
-                val appWidgetIds = appWidgetManager. getAppWidgetIds(
-                    ComponentName(context, DdayStyle1WidgetProvider:: class. java)
+                val appWidgetIds = appWidgetManager.getAppWidgetIds(
+                    ComponentName(context, DdayStyle1WidgetProvider:: class.java)
                 )
                 appWidgetIds.forEach { updateAppWidget(context, appWidgetManager, it) }
             } catch (e: Exception) {
@@ -136,7 +136,7 @@ class DdayStyle2WidgetProvider : AppWidgetProvider() {
     }
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
-        val widgetPrefs = context. getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
+        val widgetPrefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
         val editor = widgetPrefs.edit()
         appWidgetIds.forEach { editor.remove("widget_style2_${it}_dday_id") }
         editor.apply()

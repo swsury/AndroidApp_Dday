@@ -30,10 +30,10 @@ fun DdayCard(
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
-    val cardColor = dday.color. toComposeColor()
+    val cardColor = dday.color.toComposeColor()
 
     val ddayText = DateCalculator.calculateDDay(
-        targetDate = dday. date,
+        targetDate = dday.date,
         excludePublicHolidays = dday.excludePublicHolidays,
         excludeCustomDays = dday.excludeCustomDays,
         excludedWeekdays = dday.excludedWeekdays,  // 🔥 변경
@@ -44,17 +44,17 @@ fun DdayCard(
     val formattedDate = DateCalculator.formatDate(dday.date)
 
     Card(
-        modifier = modifier. fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults. cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column {
             /* 상단 컬러 바 */
             Box(
                 modifier = Modifier
-                    . fillMaxWidth()
-                    . height(36.dp)
+                    .fillMaxWidth()
+                    .height(36.dp)
                     .background(
                         cardColor,
                         RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
@@ -76,12 +76,12 @@ fun DdayCard(
                     Box {
                         IconButton(
                             onClick = { showMenu = true },
-                            modifier = Modifier. size(20.dp)
+                            modifier = Modifier.size(20.dp)
                         ) {
                             Icon(
-                                imageVector = Icons.Default. MoreHoriz,
+                                imageVector = Icons.Default.MoreHoriz,
                                 contentDescription = "메뉴",
-                                tint = Color. White
+                                tint = Color.White
                             )
                         }
 
@@ -118,7 +118,7 @@ fun DdayCard(
 
             /* 카드 내용 */
             Column(
-                modifier = Modifier. padding(16.dp),
+                modifier = Modifier.padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Row(
@@ -148,7 +148,7 @@ fun DdayCard(
                         imageVector = Icons.Default.CalendarToday,
                         contentDescription = null,
                         tint = Color.Gray,
-                        modifier = Modifier. size(14.dp)
+                        modifier = Modifier.size(14.dp)
                     )
                     Text(
                         text = formattedDate,

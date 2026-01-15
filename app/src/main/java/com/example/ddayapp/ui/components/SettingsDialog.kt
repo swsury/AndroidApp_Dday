@@ -46,7 +46,7 @@ fun SettingsDialog(
 
     LaunchedEffect(settings) {
         publicHolidays = settings.publicHolidays
-        customDays = settings. customDays
+        customDays = settings.customDays
         sabbathDay = settings.sabbathDay
     }
 
@@ -57,8 +57,8 @@ fun SettingsDialog(
                 .fillMaxHeight(0.9f)
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults. cardColors(
-                containerColor = Color. White
+            colors = CardDefaults.cardColors(
+                containerColor = Color.White
             )
         ) {
             Column(
@@ -98,7 +98,7 @@ fun SettingsDialog(
                     Text(
                         text = "공휴일 (자동)",
                         fontSize = 16.sp,
-                        fontWeight = FontWeight. Bold,
+                        fontWeight = FontWeight.Bold,
                         color = Color(0xFF24a19c)
                     )
 
@@ -106,18 +106,18 @@ fun SettingsDialog(
                         text = "시스템 연도에 맞춰 자동으로 불러옵니다",
                         fontSize = 12.sp,
                         color = Color(0xFF999999),
-                        modifier = Modifier. padding(top = 4.dp, bottom = 12.dp)
+                        modifier = Modifier.padding(top = 4.dp, bottom = 12.dp)
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // 공휴일 목록
-                    if (publicHolidays. isEmpty()) {
+                    if (publicHolidays.isEmpty()) {
                         Box(
                             modifier = Modifier
-                                . fillMaxWidth()
+                                .fillMaxWidth()
                                 .padding(vertical = 16.dp),
-                            contentAlignment = Alignment. Center
+                            contentAlignment = Alignment.Center
                         ) {
                             if (isLoadingHolidays) {
                                 CircularProgressIndicator(
@@ -160,14 +160,14 @@ fun SettingsDialog(
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 publicHolidays
-                                    . filter { holiday -> holiday.date. isNotBlank() }
+                                    .filter { holiday -> holiday.date.isNotBlank() }
                                     .forEach { holiday ->
-                                        val displayDate = DateCalculator. formatDisplayDate(holiday.date)
+                                        val displayDate = DateCalculator.formatDisplayDate(holiday.date)
 
                                         Row(
                                             modifier = Modifier
-                                                . fillMaxWidth()
-                                                . background(
+                                                .fillMaxWidth()
+                                                .background(
                                                     color = Color.White,
                                                     shape = RoundedCornerShape(6.dp)
                                                 )
@@ -214,7 +214,7 @@ fun SettingsDialog(
                     // 날짜 추가
                     Column(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement. spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         OutlinedTextField(
                             value = newCustomDate,
@@ -229,7 +229,7 @@ fun SettingsDialog(
                             shape = RoundedCornerShape(8.dp),
                             colors = OutlinedTextFieldDefaults.colors(
                                 disabledTextColor = Color.Black,
-                                disabledBorderColor = Color. Gray
+                                disabledBorderColor = Color.Gray
                             )
                         )
 
@@ -239,15 +239,15 @@ fun SettingsDialog(
                                 onDismissRequest = { showDatePicker = false },
                                 confirmButton = {
                                     TextButton(onClick = {
-                                        datePickerState.selectedDateMillis?. let { millis ->
+                                        datePickerState.selectedDateMillis?.let { millis ->
                                             val cal = Calendar.getInstance().apply {
                                                 timeInMillis = millis
                                             }
-                                            newCustomDate = String. format(
+                                            newCustomDate = String.format(
                                                 "%04d-%02d-%02d",
                                                 cal.get(Calendar.YEAR),
-                                                cal.get(Calendar. MONTH) + 1,
-                                                cal.get(Calendar. DAY_OF_MONTH)
+                                                cal.get(Calendar.MONTH) + 1,
+                                                cal.get(Calendar.DAY_OF_MONTH)
                                             )
                                         }
                                         showDatePicker = false
@@ -272,7 +272,7 @@ fun SettingsDialog(
                             OutlinedTextField(
                                 value = newCustomName,
                                 onValueChange = { newCustomName = it },
-                                modifier = Modifier. weight(1f),
+                                modifier = Modifier.weight(1f),
                                 label = { Text("내용", fontSize = 14.sp) },
                                 placeholder = { Text("내용 (선택)", fontSize = 14.sp) },
                                 singleLine = true,
@@ -284,7 +284,7 @@ fun SettingsDialog(
                                     if (newCustomDate.isNotBlank()) {
                                         val newDay = Holiday(
                                             date = newCustomDate,
-                                            name = newCustomName. ifBlank { "안식일" }
+                                            name = newCustomName.ifBlank { "안식일" }
                                         )
                                         onAddCustomDay(newDay)
                                         customDays = customDays + newDay
@@ -347,7 +347,7 @@ fun SettingsDialog(
                                     .filter { holiday -> holiday.date.isNotBlank() }  // 🔥 명시적 파라미터
                                     .forEach { holiday ->  // 🔥 명시적 파라미터
                                         val displayDate =
-                                            DateCalculator.formatDisplayDate(holiday. date)
+                                            DateCalculator.formatDisplayDate(holiday.date)
 
                                         Row(
                                             modifier = Modifier
@@ -378,14 +378,14 @@ fun SettingsDialog(
 
                                             TextButton(
                                                 onClick = {
-                                                    onRemoveCustomDay(holiday. date)
+                                                    onRemoveCustomDay(holiday.date)
                                                     customDays =
                                                         customDays.filter { it.date != holiday.date }
                                                 }
                                             ) {
                                                 Text(
                                                     "삭제",
-                                                    color = Color. Red,
+                                                    color = Color.Red,
                                                     fontSize = 14.sp
                                                 )
                                             }

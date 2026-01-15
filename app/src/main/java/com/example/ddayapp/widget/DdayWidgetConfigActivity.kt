@@ -47,10 +47,10 @@ class DdayWidgetConfigActivity : ComponentActivity() {
         // 위젯 ID 가져오기
         appWidgetId = intent?.extras?.getInt(
             AppWidgetManager.EXTRA_APPWIDGET_ID,
-            AppWidgetManager. INVALID_APPWIDGET_ID
+            AppWidgetManager.INVALID_APPWIDGET_ID
         ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
 
-        Log. d(TAG, "Widget ID: $appWidgetId")
+        Log.d(TAG, "Widget ID: $appWidgetId")
 
         if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             Log.e(TAG, "Invalid widget ID, finishing")
@@ -90,7 +90,7 @@ class DdayWidgetConfigActivity : ComponentActivity() {
         val resultValue = Intent().apply {
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         }
-        setResult(Activity. RESULT_OK, resultValue)
+        setResult(Activity.RESULT_OK, resultValue)
         Log.d(TAG, "Finishing with success")
         finish()
     }
@@ -108,7 +108,7 @@ fun WidgetConfigScreen(
     val settings = remember { prefsHelper.loadSettings() }
 
     val publicHolidays = remember {
-        settings.publicHolidays.map { it.date }. toSet()
+        settings.publicHolidays.map { it.date }.toSet()
     }
     val customDays = remember {
         settings.customDays.map { it.date }.toSet()
@@ -130,7 +130,7 @@ fun WidgetConfigScreen(
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "취소",
-                            tint = Color. White
+                            tint = Color.White
                         )
                     }
                 },
@@ -154,7 +154,7 @@ fun WidgetConfigScreen(
                     text = "📅",
                     fontSize = 64.sp
                 )
-                Spacer(modifier = Modifier. height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "등록된 D-day가 없습니다",
                     fontSize = 18.sp,
@@ -178,7 +178,7 @@ fun WidgetConfigScreen(
             ) {
                 items(ddays) { dday ->
                     val ddayText = try {
-                        DateCalculator. calculateDDay(
+                        DateCalculator.calculateDDay(
                             targetDate = dday.date,
                             excludePublicHolidays = dday.excludePublicHolidays,
                             excludeCustomDays = dday.excludeCustomDays,
@@ -205,7 +205,7 @@ fun WidgetConfigScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(36.dp)
-                                    . background(
+                                    .background(
                                         dday.color.toComposeColor(),
                                         RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
                                     )
@@ -225,7 +225,7 @@ fun WidgetConfigScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .background(Color.White)
-                                    . padding(16.dp)
+                                    .padding(16.dp)
                             ) {
                                 Text(
                                     text = dday.title,
@@ -245,7 +245,7 @@ fun WidgetConfigScreen(
                                         text = ddayText,
                                         fontSize = 32.sp,
                                         fontWeight = FontWeight.Bold,
-                                        color = dday.color. toComposeColor()
+                                        color = dday.color.toComposeColor()
                                     )
 
                                     Text(

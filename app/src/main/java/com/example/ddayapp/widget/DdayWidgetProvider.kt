@@ -29,7 +29,7 @@ class DdayWidgetProvider :  AppWidgetProvider() {
                 val widgetPrefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
 
                 // 위젯에 설정된 D-day ID와 스타일 가져오기
-                val ddayId = widgetPrefs. getLong("widget_${appWidgetId}_dday_id", -1L)
+                val ddayId = widgetPrefs.getLong("widget_${appWidgetId}_dday_id", -1L)
                 val style = widgetPrefs.getInt("widget_${appWidgetId}_style", 1)
 
                 // 스타일에 따른 레이아웃 선택
@@ -37,10 +37,10 @@ class DdayWidgetProvider :  AppWidgetProvider() {
                     1 -> R.layout.widget_dday_style1
                     2 -> R.layout.widget_dday_style2
                     3 -> R.layout.widget_dday_style3
-                    else -> R.layout. widget_dday_style1
+                    else -> R.layout.widget_dday_style1
                 }
 
-                val views = RemoteViews(context. packageName, layoutId)
+                val views = RemoteViews(context.packageName, layoutId)
 
                 if (ddayId != -1L) {
                     // D-day 데이터 로드
@@ -50,11 +50,11 @@ class DdayWidgetProvider :  AppWidgetProvider() {
 
                     if (dday != null) {
                         // D-day 정보 표시
-                        views.setTextViewText(R.id. widget_label, dday.labelTitle)
+                        views.setTextViewText(R.id.widget_label, dday.labelTitle)
                         views.setTextViewText(R.id.widget_title, dday.title)
 
                         // D-day 계산
-                        val publicHolidays = settings.publicHolidays.map { it.date }. toSet()
+                        val publicHolidays = settings.publicHolidays.map { it.date }.toSet()
                         val customDays = settings.customDays.map { it.date }.toSet()
 
                         val ddayText = DateCalculator.calculateDDay(
@@ -66,15 +66,15 @@ class DdayWidgetProvider :  AppWidgetProvider() {
                             customDays = customDays
                         )
 
-                        views.setTextViewText(R. id.widget_dday, ddayText)
-                        views.setTextViewText(R. id.widget_date, dday.date)
+                        views.setTextViewText(R.id.widget_dday, ddayText)
+                        views.setTextViewText(R.id.widget_date, dday.date)
 
                         // 배경 색상 설정
                         try {
-                            val color = Color. parseColor(dday.color)
+                            val color = Color.parseColor(dday.color)
                             views.setInt(R.id.widget_background, "setBackgroundColor", color)
                         } catch (e:  Exception) {
-                            Log. e(TAG, "Failed to parse color: ${dday.color}", e)
+                            Log.e(TAG, "Failed to parse color: ${dday.color}", e)
                             views.setInt(R.id.widget_background, "setBackgroundColor", Color.parseColor("#24a19c"))
                         }
                     } else {
@@ -106,12 +106,12 @@ class DdayWidgetProvider :  AppWidgetProvider() {
 
         private fun setDefaultWidgetContent(views: RemoteViews, title: String, subtitle: String, style: Int) {
             views.setTextViewText(R.id.widget_title, title)
-            views.setTextViewText(R.id. widget_dday, "")
+            views.setTextViewText(R.id.widget_dday, "")
             views.setInt(R.id.widget_background, "setBackgroundColor", Color.parseColor("#24a19c"))
 
             // 스타일 4는 라벨과 날짜가 숨겨져 있음
             if (style != 4) {
-                views. setTextViewText(R.id.widget_label, "D-day")
+                views.setTextViewText(R.id.widget_label, "D-day")
                 views.setTextViewText(R.id.widget_date, subtitle)
             }
         }
@@ -123,13 +123,13 @@ class DdayWidgetProvider :  AppWidgetProvider() {
             try {
                 val appWidgetManager = AppWidgetManager.getInstance(context)
                 val appWidgetIds = appWidgetManager.getAppWidgetIds(
-                    ComponentName(context, DdayWidgetProvider::class. java)
+                    ComponentName(context, DdayWidgetProvider::class.java)
                 )
                 appWidgetIds.forEach { appWidgetId ->
                     updateAppWidget(context, appWidgetManager, appWidgetId)
                 }
             } catch (e: Exception) {
-                Log. e(TAG, "Failed to update all widgets", e)
+                Log.e(TAG, "Failed to update all widgets", e)
             }
         }
     }

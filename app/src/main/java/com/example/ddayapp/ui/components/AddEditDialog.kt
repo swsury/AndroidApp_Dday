@@ -39,8 +39,8 @@ fun AddEditDialog(
     var title by remember { mutableStateOf(dday?.title ?: "") }
     var date by remember { mutableStateOf(dday?.date ?: DateCalculator.getTodayString()) }
     var selectedColor by remember { mutableStateOf(dday?.color ?: "#24a19c") }
-    var excludePublicHolidays by remember { mutableStateOf(dday?. excludePublicHolidays ?: false) }
-    var excludeCustomDays by remember { mutableStateOf(dday?. excludeCustomDays ?: false) }
+    var excludePublicHolidays by remember { mutableStateOf(dday?.excludePublicHolidays ?: false) }
+    var excludeCustomDays by remember { mutableStateOf(dday?.excludeCustomDays ?: false) }
     var excludedWeekdays by remember { mutableStateOf(dday?.excludedWeekdays ?: emptySet()) }  // 🔥 변경
 
     /* 📅 DatePicker 상태 */
@@ -66,7 +66,7 @@ fun AddEditDialog(
     Dialog(onDismissRequest = onDismiss) {
         Card(
             modifier = Modifier
-                . fillMaxWidth()
+                .fillMaxWidth()
                 .wrapContentHeight()
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
@@ -80,9 +80,9 @@ fun AddEditDialog(
 
                 /* ===== 헤더 ===== */
                 Row(
-                    modifier = Modifier. fillMaxWidth(),
-                    horizontalArrangement = Arrangement. SpaceBetween,
-                    verticalAlignment = Alignment. CenterVertically
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = if (dday == null) "새 D-day" else "D-day 편집",
@@ -108,7 +108,7 @@ fun AddEditDialog(
                     singleLine = true
                 )
 
-                Spacer(Modifier. height(16.dp))
+                Spacer(Modifier.height(16.dp))
 
                 /* ===== 제목 ===== */
                 Text("제목", fontSize = 14.sp, color = Color(0xFF666666))
@@ -121,11 +121,11 @@ fun AddEditDialog(
                     singleLine = true
                 )
 
-                Spacer(Modifier. height(16.dp))
+                Spacer(Modifier.height(16.dp))
 
                 /* ===== 날짜 (달력 표시) ===== */
                 Text("날짜", fontSize = 14.sp, color = Color(0xFF666666))
-                Spacer(Modifier. height(8.dp))
+                Spacer(Modifier.height(8.dp))
                 OutlinedTextField(
                     value = date,
                     onValueChange = {},
@@ -136,8 +136,8 @@ fun AddEditDialog(
                     placeholder = { Text("yyyy-MM-dd") },
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
-                        disabledTextColor = Color. Black,
-                        disabledBorderColor = Color. Gray
+                        disabledTextColor = Color.Black,
+                        disabledBorderColor = Color.Gray
                     )
                 )
 
@@ -151,9 +151,9 @@ fun AddEditDialog(
                                     val cal = Calendar.getInstance().apply {
                                         timeInMillis = millis
                                     }
-                                    date = String. format(
+                                    date = String.format(
                                         "%04d-%02d-%02d",
-                                        cal.get(Calendar. YEAR),
+                                        cal.get(Calendar.YEAR),
                                         cal.get(Calendar.MONTH) + 1,
                                         cal.get(Calendar.DAY_OF_MONTH)
                                     )
@@ -180,7 +180,7 @@ fun AddEditDialog(
                 /* ---------- 공휴일 제외 ---------- */
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier. fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Checkbox(
                         checked = excludePublicHolidays,
@@ -236,11 +236,11 @@ fun AddEditDialog(
 
                 /* ---------- 🔥 요일 제외 (신규) ---------- */
                 Text("선택 요일 제외", fontSize = 14.sp, color = Color(0xFF666666))
-                Spacer(Modifier. height(8.dp))
+                Spacer(Modifier.height(8.dp))
 
                 // 🔥 요일 선택 그리드 (원형 버튼 스타일)
                 Column(
-                    modifier = Modifier. fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     // 첫 번째 줄: 일~수
@@ -269,7 +269,7 @@ fun AddEditDialog(
                                             excludedWeekdays + dayOfWeek
                                         }
                                     },
-                                contentAlignment = Alignment. Center
+                                contentAlignment = Alignment.Center
                             ) {
                                 Text(
                                     text = dayName,
@@ -287,9 +287,9 @@ fun AddEditDialog(
                     // 두 번째 줄: 목~토
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement. spacedBy(12.dp)
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        weekdays. drop(4).forEach { (dayOfWeek, dayName) ->
+                        weekdays.drop(4).forEach { (dayOfWeek, dayName) ->
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
@@ -304,13 +304,13 @@ fun AddEditDialog(
                                         shape = CircleShape
                                     )
                                     .clickable {
-                                        excludedWeekdays = if (excludedWeekdays. contains(dayOfWeek)) {
+                                        excludedWeekdays = if (excludedWeekdays.contains(dayOfWeek)) {
                                             excludedWeekdays - dayOfWeek
                                         } else {
                                             excludedWeekdays + dayOfWeek
                                         }
                                     },
-                                contentAlignment = Alignment. Center
+                                contentAlignment = Alignment.Center
                             ) {
                                 Text(
                                     text = dayName,
@@ -384,9 +384,9 @@ fun AddEditDialog(
                     colors.forEach { color ->
                         Box(
                             modifier = Modifier
-                                . size(36.dp)
+                                .size(36.dp)
                                 .clip(CircleShape)
-                                .background(color. toComposeColor())
+                                .background(color.toComposeColor())
                                 .border(
                                     width = if (color == selectedColor) 3.dp else 0.dp,
                                     color = Color.Black,
@@ -423,7 +423,7 @@ fun AddEditDialog(
                         .fillMaxWidth()
                         .height(48.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = selectedColor. toComposeColor()
+                        containerColor = selectedColor.toComposeColor()
                     )
                 ) {
                     Text(

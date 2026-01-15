@@ -12,7 +12,7 @@ object DateCalculator {
      * @param targetDate 목표 날짜 (yyyy-MM-dd)
      * @param excludePublicHolidays 공휴일 제외 여부
      * @param excludeCustomDays 안식일 제외 여부
-     * @param excludedWeekdays 제외할 요일 Set (1=일, 2=월, .. ., 7=토)
+     * @param excludedWeekdays 제외할 요일 Set (1=일, 2=월, ..., 7=토)
      * @param publicHolidays 공휴일 Set (yyyy-MM-dd 형식)
      * @param customDays 안식일 Set (yyyy-MM-dd 형식)
      * @return D-Day 문자열 (예: "D-30", "D-Day", "D+15")
@@ -28,9 +28,9 @@ object DateCalculator {
 
         val today = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar. MINUTE, 0)
+            set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
-            set(Calendar. MILLISECOND, 0)
+            set(Calendar.MILLISECOND, 0)
         }
 
         val target = Calendar.getInstance().apply {
@@ -77,7 +77,7 @@ object DateCalculator {
             count++
         }
 
-        return if (direction > 0) "D-$count" else "D+${Math. abs(count)}"
+        return if (direction > 0) "D-$count" else "D+${Math.abs(count)}"
     }
 
     /**
@@ -89,16 +89,16 @@ object DateCalculator {
     }
 
     /**
-     * 날짜를 포맷팅 (yyyy.  MM. dd.)
+     * 날짜를 포맷팅 (yyyy. MM.dd.)
      */
     fun formatDate(dateStr:  String): String {
         return try {
             val date = dateFormat.parse(dateStr) ?: return dateStr
             val cal = Calendar.getInstance().apply { time = date }
-            val year = cal.get(Calendar. YEAR)
+            val year = cal.get(Calendar.YEAR)
             val month = String.format("%02d", cal.get(Calendar.MONTH) + 1)
             val day = String.format("%02d", cal.get(Calendar.DAY_OF_MONTH))
-            "$year. $month. $day."
+            "$year.$month.$day."
         } catch (e: Exception) {
             dateStr
         }
@@ -108,17 +108,17 @@ object DateCalculator {
      * 오늘 날짜를 문자열로 반환 (yyyy-MM-dd)
      */
     fun getTodayString(): String {
-        val cal = Calendar. getInstance()
+        val cal = Calendar.getInstance()
         return String.format(
             "%04d-%02d-%02d",
             cal.get(Calendar.YEAR),
-            cal.get(Calendar. MONTH) + 1,
+            cal.get(Calendar.MONTH) + 1,
             cal.get(Calendar.DAY_OF_MONTH)
         )
     }
 
     /**
-     * 날짜 표시 형식 변환 (yyyy-MM-dd → yyyy. MM.dd)
+     * 날짜 표시 형식 변환 (yyyy-MM-dd → yyyy.MM.dd)
      */
     fun formatDisplayDate(date: String): String {
         return try {
@@ -140,8 +140,8 @@ object DateCalculator {
         holidays: Set<String>
     ): Boolean {
         val year = calendar.get(Calendar.YEAR)
-        val month = String. format("%02d", calendar.get(Calendar.MONTH) + 1)
-        val day = String.format("%02d", calendar. get(Calendar.DAY_OF_MONTH))
+        val month = String.format("%02d", calendar.get(Calendar.MONTH) + 1)
+        val day = String.format("%02d", calendar.get(Calendar.DAY_OF_MONTH))
         val date = "$year-$month-$day"
         return date in holidays
     }

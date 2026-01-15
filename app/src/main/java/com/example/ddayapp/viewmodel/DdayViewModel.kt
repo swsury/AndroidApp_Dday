@@ -37,7 +37,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
      * 데이터 로드
      */
     private fun loadData() {
-        _ddays.value = prefsHelper. loadDDays()
+        _ddays.value = prefsHelper.loadDDays()
         _settings.value = prefsHelper.loadSettings()
         checkAndUpdateYearHolidays()
     }
@@ -86,7 +86,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
      * D-day 삭제
      */
     fun deleteDDay(id: Long) {
-        _ddays.value = _ddays.value. filter { it.id != id }
+        _ddays.value = _ddays.value.filter { it.id != id }
         prefsHelper.saveDDays(_ddays.value)
 
         // 위젯 업데이트
@@ -97,15 +97,15 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
      * D-day 순서 변경
      */
     fun reorderDDays(fromIndex: Int, toIndex: Int) {
-        val currentList = _ddays.value. toMutableList()
+        val currentList = _ddays.value.toMutableList()
 
         // 인덱스 유효성 검사
         if (fromIndex == toIndex) return
         if (fromIndex !in currentList.indices) return
-        if (toIndex !in currentList. indices) return
+        if (toIndex !in currentList.indices) return
 
         // 아이템 이동
-        val item = currentList. removeAt(fromIndex)
+        val item = currentList.removeAt(fromIndex)
         currentList.add(toIndex, item)
 
         // order 재설정
@@ -117,6 +117,21 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         prefsHelper.saveDDays(_ddays.value)
 
         // 위젯 업데이트
+        updateAllWidgets()
+    }
+
+    /**
+     * D-day를 다른 그룹으로 이동
+     */
+    fun moveDdayToGroup(ddayId: Long, targetLabelTitle: String) {
+        _ddays.value = _ddays.value.map { dday ->
+            if (dday.id == ddayId) {
+                dday.copy(labelTitle = targetLabelTitle)
+            } else {
+                dday
+            }
+        }
+        prefsHelper.saveDDays(_ddays.value)
         updateAllWidgets()
     }
 
@@ -192,9 +207,9 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
      */
     fun fetchPublicHolidaysFromApi(year: String, onComplete: ((Boolean, String) -> Unit)? = null) {
         viewModelScope.launch {
-            _isLoadingHolidays. value = true
+            _isLoadingHolidays.value = true
 
-            val result = HolidayApi. fetchHolidays(year)
+            val result = HolidayApi.fetchHolidays(year)
 
             result.onSuccess { newHolidays:  List<Holiday> ->
                 val currentSettings = _settings.value

@@ -15,14 +15,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // 🔥 위젯에서 전달된 D-day ID 받기
-        val ddayIdFromWidget = intent?. getLongExtra("dday_id", -1L) ?: -1L
+        val ddayIdFromWidget = intent?.getLongExtra("dday_id", -1L) ?: -1L
         val shouldOpenEdit = intent?.getBooleanExtra("open_edit", false) ?: false
 
         setContent {
             DdayAppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme. background
+                    color = MaterialTheme.colorScheme.background
                 ) {
                     DdayScreen(
                         initialDdayIdToEdit = if (shouldOpenEdit && ddayIdFromWidget != -1L) {

@@ -31,7 +31,7 @@ class PrefsHelper(context: Context) {
     fun loadDDays(): List<DDay> {
         val json = prefs.getString(KEY_DDAYS, null) ?: return emptyList()
         val type = object : TypeToken<List<DDay>>() {}.type
-        val loadedList:  List<DDay> = gson. fromJson(json, type) ?: emptyList()
+        val loadedList:  List<DDay> = gson.fromJson(json, type) ?: emptyList()
 
         // 🔥 order 필드로 정렬
         return loadedList.sortedBy { it.order }
@@ -49,7 +49,7 @@ class PrefsHelper(context: Context) {
      * 설정 로드
      */
     fun loadSettings(): Settings {
-        val json = prefs. getString(KEY_SETTINGS, null) ?: return Settings()
+        val json = prefs.getString(KEY_SETTINGS, null) ?: return Settings()
         return gson.fromJson(json, Settings::class.java) ?: Settings()
     }
 }

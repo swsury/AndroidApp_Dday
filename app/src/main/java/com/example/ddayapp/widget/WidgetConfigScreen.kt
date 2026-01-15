@@ -33,10 +33,10 @@ fun WidgetConfigScreen(
     val settings = remember { prefsHelper.loadSettings() }
 
     val publicHolidays = remember {
-        settings.publicHolidays.map { it.date }. toSet()
+        settings.publicHolidays.map { it.date }.toSet()
     }
     val customDays = remember {
-        settings. customDays.map { it. date }.toSet()
+        settings.customDays.map { it.date }.toSet()
     }
 
     Scaffold(
@@ -55,7 +55,7 @@ fun WidgetConfigScreen(
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "취소",
-                            tint = Color. White
+                            tint = Color.White
                         )
                     }
                 },
@@ -75,7 +75,7 @@ fun WidgetConfigScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(text = "📅", fontSize = 64.sp)
-                Spacer(modifier = Modifier. height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "등록된 D-day가 없습니다",
                     fontSize = 18.sp,
@@ -98,7 +98,7 @@ fun WidgetConfigScreen(
             ) {
                 items(ddays) { dday ->
                     val ddayText = try {
-                        DateCalculator. calculateDDay(
+                        DateCalculator.calculateDDay(
                             targetDate = dday.date,
                             excludePublicHolidays = dday.excludePublicHolidays,
                             excludeCustomDays = dday.excludeCustomDays,
@@ -122,7 +122,7 @@ fun WidgetConfigScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(36.dp)
-                                    . background(
+                                    .background(
                                         dday.color.toComposeColor(),
                                         RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
                                     )
@@ -159,7 +159,7 @@ fun WidgetConfigScreen(
                                         text = ddayText,
                                         fontSize = 32.sp,
                                         fontWeight = FontWeight.Bold,
-                                        color = dday.color. toComposeColor()
+                                        color = dday.color.toComposeColor()
                                     )
                                     Text(
                                         text = dday.date,

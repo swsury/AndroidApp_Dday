@@ -20,9 +20,9 @@ class DdayStyle3WidgetConfigActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        setResult(Activity. RESULT_CANCELED)
+        setResult(Activity.RESULT_CANCELED)
 
-        appWidgetId = intent?.extras?. getInt(
+        appWidgetId = intent?.extras?.getInt(
             AppWidgetManager.EXTRA_APPWIDGET_ID,
             AppWidgetManager.INVALID_APPWIDGET_ID
         ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
@@ -61,7 +61,7 @@ class DdayStyle3WidgetConfigActivity : ComponentActivity() {
         val resultValue = Intent().apply {
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         }
-        setResult(Activity. RESULT_OK, resultValue)
+        setResult(Activity.RESULT_OK, resultValue)
         finish()
     }
 }

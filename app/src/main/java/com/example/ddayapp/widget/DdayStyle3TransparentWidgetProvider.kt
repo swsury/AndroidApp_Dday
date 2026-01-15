@@ -12,6 +12,7 @@ import com.example.ddayapp.R
 import com.example.ddayapp.data.PrefsHelper
 import com.example.ddayapp.utils.DateCalculator
 import android.util.Log
+import android.graphics.Color
 
 class DdayStyle3TransparentWidgetProvider : AppWidgetProvider() {
 
@@ -53,7 +54,20 @@ class DdayStyle3TransparentWidgetProvider : AppWidgetProvider() {
                         views.setTextViewText(R.id.widget_dday, ddayText)
                         views.setTextViewText(R.id.widget_date, dday.date)
 
-                        // 🔥 위젯 클릭 시 해당 D-day 편집 화면 열기
+                        // 🔥 텍스트 색상을 D-day 색상으로 변경
+                        try {
+                            val color = Color.parseColor(dday.color)
+                            views.setTextColor(R.id.widget_label, color)  // 라벨 색상
+                            views.setTextColor(R.id.widget_dday, color)   // D-day 숫자 색상
+                            views.setTextColor(R.id.widget_title, color)  // 제목 색상 (선택사항)
+                            views.setTextColor(R.id.widget_date, color) //날짜 색상
+                        } catch (e: Exception) {
+                            // 기본 색상 유지
+                            views.setTextColor(R.id.widget_label, Color.parseColor("#24a19c"))
+                            views.setTextColor(R.id.widget_dday, Color.parseColor("#24a19c"))
+                        }
+
+                        // 위젯 클릭 시 해당 D-day 편집 화면 열기
                         val intent = Intent(context, MainActivity::class.java).apply {
                             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                             putExtra("dday_id", dday.id)
@@ -61,14 +75,13 @@ class DdayStyle3TransparentWidgetProvider : AppWidgetProvider() {
                         }
                         val pendingIntent = PendingIntent.getActivity(
                             context,
-                            appWidgetId, // 고유한 requestCode 사용
+                            appWidgetId,
                             intent,
-                            PendingIntent. FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                         )
                         views.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
 
                     } else {
-                        // D-day가 삭제된 경우
                         setDefaultContent(views)
                         setDefaultClickIntent(context, views, appWidgetId)
                     }
@@ -90,6 +103,12 @@ class DdayStyle3TransparentWidgetProvider : AppWidgetProvider() {
             views.setTextViewText(R.id.widget_title, "위젯 설정")
             views.setTextViewText(R.id.widget_dday, "")
             views.setTextViewText(R.id.widget_date, "터치하여 설정")
+
+            // 기본 텍스트 색상
+            views.setTextColor(R.id.widget_label, Color.parseColor("#24a19c"))
+            views.setTextColor(R.id.widget_dday, Color.parseColor("#24a19c"))
+            views.setTextColor(R.id.widget_title, Color.parseColor("#666666"))
+            views.setTextColor(R.id.widget_date, Color.parseColor("#24a19c"))
         }
 
         // 🔥 기본 클릭 시 메인 화면만 열기
@@ -114,7 +133,7 @@ class DdayStyle3TransparentWidgetProvider : AppWidgetProvider() {
                 )
                 appWidgetIds.forEach { updateAppWidget(context, appWidgetManager, it) }
             } catch (e: Exception) {
-                Log. e(TAG, "Failed to update all widgets", e)
+                Log.e(TAG, "Failed to update all widgets", e)
             }
         }
     }

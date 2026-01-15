@@ -8,6 +8,7 @@
     android:minResizeHeight="110dp"
     android:updatePeriodMillis="1800000"
     android:initialLayout="@layout/widget_dday_style3_transparent"
+    android:previewLayout="@layout/widget_dday_style3_transparent"
     android:configure="com.example.ddayapp.widget.DdayStyle3TransparentWidgetConfigActivity"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"

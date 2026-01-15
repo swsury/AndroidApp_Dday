@@ -42,6 +42,17 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         checkAndUpdateYearHolidays()
     }
 
+    //위젯 자동업데이트
+
+    private fun updateAllWidgets() {
+        DdayStyle1WidgetProvider.updateAllWidgets(context)
+        DdayStyle2WidgetProvider.updateAllWidgets(context)
+        DdayStyle3WidgetProvider.updateAllWidgets(context)  // ✅ 추가!
+        DdayStyle1TransparentWidgetProvider.updateAllWidgets(context)
+        DdayStyle2TransparentWidgetProvider.updateAllWidgets(context)
+        DdayStyle3TransparentWidgetProvider.updateAllWidgets(context)
+    }
+
     /**
      * D-day 추가
      */
@@ -55,12 +66,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         prefsHelper.saveDDays(_ddays.value)
 
         // 위젯 업데이트
-        DdayStyle1WidgetProvider.updateAllWidgets(context)
-        DdayStyle1WidgetProvider.updateAllWidgets(context)
-        DdayStyle2WidgetProvider.updateAllWidgets(context)
-        DdayStyle1TransparentWidgetProvider.updateAllWidgets(context)
-        DdayStyle2TransparentWidgetProvider.updateAllWidgets(context)
-        DdayStyle3TransparentWidgetProvider.updateAllWidgets(context)
+        updateAllWidgets()
     }
 
     /**
@@ -73,12 +79,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         prefsHelper.saveDDays(_ddays.value)
 
         // 위젯 업데이트
-        DdayStyle1WidgetProvider.updateAllWidgets(context)
-        DdayStyle1WidgetProvider.updateAllWidgets(context)
-        DdayStyle2WidgetProvider.updateAllWidgets(context)
-        DdayStyle1TransparentWidgetProvider.updateAllWidgets(context)
-        DdayStyle2TransparentWidgetProvider.updateAllWidgets(context)
-        DdayStyle3TransparentWidgetProvider.updateAllWidgets(context)
+        updateAllWidgets()
     }
 
     /**
@@ -89,12 +90,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         prefsHelper.saveDDays(_ddays.value)
 
         // 위젯 업데이트
-        DdayStyle1WidgetProvider.updateAllWidgets(context)
-        DdayStyle1WidgetProvider.updateAllWidgets(context)
-        DdayStyle2WidgetProvider.updateAllWidgets(context)
-        DdayStyle1TransparentWidgetProvider.updateAllWidgets(context)
-        DdayStyle2TransparentWidgetProvider.updateAllWidgets(context)
-        DdayStyle3TransparentWidgetProvider.updateAllWidgets(context)
+        updateAllWidgets()
     }
 
     /**
@@ -121,12 +117,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         prefsHelper.saveDDays(_ddays.value)
 
         // 위젯 업데이트
-        DdayStyle1WidgetProvider.updateAllWidgets(context)
-        DdayStyle1WidgetProvider.updateAllWidgets(context)
-        DdayStyle2WidgetProvider.updateAllWidgets(context)
-        DdayStyle1TransparentWidgetProvider.updateAllWidgets(context)
-        DdayStyle2TransparentWidgetProvider.updateAllWidgets(context)
-        DdayStyle3TransparentWidgetProvider.updateAllWidgets(context)
+        updateAllWidgets()
     }
 
     /**
@@ -136,13 +127,8 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         _settings.value = settings
         prefsHelper.saveSettings(settings)
 
-        // 위젯 업데이트 (설정 변경 시)
-        DdayStyle1WidgetProvider.updateAllWidgets(context)
-        DdayStyle1WidgetProvider.updateAllWidgets(context)
-        DdayStyle2WidgetProvider.updateAllWidgets(context)
-        DdayStyle1TransparentWidgetProvider.updateAllWidgets(context)
-        DdayStyle2TransparentWidgetProvider.updateAllWidgets(context)
-        DdayStyle3TransparentWidgetProvider.updateAllWidgets(context)
+        // 위젯 업데이트
+        updateAllWidgets()
     }
 
     /**

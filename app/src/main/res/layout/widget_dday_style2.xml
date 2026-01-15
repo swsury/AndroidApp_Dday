@@ -3,28 +3,30 @@
     android:id="@+id/widget_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp">
+    android:padding="1dp">
 
     <LinearLayout
         android:id="@+id/widget_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
         android:background="@drawable/widget_background_style2"
-        android:padding="16dp"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="1dp">
 
         <LinearLayout
-            android:layout_width="200dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="8dp">
 
             <TextView
                 android:id="@+id/widget_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
+                android:layout_marginBottom="1dp"
                 android:alpha="0.9"
                 android:text="D-day"
                 android:textColor="#FFFFFF"
@@ -35,9 +37,9 @@
                 android:id="@+id/widget_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
+                android:layout_marginBottom="1dp"
                 android:ellipsize="end"
-                android:maxLines="2"
+                android:maxLines="1"
                 android:text="제목"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"
@@ -58,11 +60,12 @@
             android:id="@+id/widget_dday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="1dp"
+            android:paddingRight="8dp"
             android:text="D-30"
             android:textColor="#FFFFFF"
             android:textSize="32sp"
-            android:textStyle="bold"
-            android:layout_marginStart="16dp" />
+            android:textStyle="bold" />
 
     </LinearLayout>
 

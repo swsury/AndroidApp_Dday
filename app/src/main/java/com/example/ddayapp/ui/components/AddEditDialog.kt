@@ -175,6 +175,8 @@ fun AddEditDialog(
 
                 Spacer(Modifier.height(16.dp))
 
+                Text("휴일 제외", fontSize = 14.sp, color = Color(0xFF666666))
+
                 /* ---------- 공휴일 제외 ---------- */
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -213,43 +215,52 @@ fun AddEditDialog(
                     )
                 }
 
+                // 🔥 전체 제외 안내
+                Text(
+                    text = when {
+                        excludePublicHolidays && excludeCustomDays ->
+                            "공휴일과 안식일을 제외하고 카운트합니다"
+                        excludePublicHolidays ->
+                            "공휴일을 제외하고 카운트합니다"
+                        excludeCustomDays ->
+                            "안식일을 제외하고 카운트합니다"
+                        else ->
+                            "모든 날짜를 포함합니다"
+                    },
+                    fontSize = 12.sp,
+                    color = Color(0xFF999999),
+                    modifier = Modifier.padding(top = 8.dp, start = 8.dp)
+                )
+
                 Spacer(Modifier.height(16.dp))
 
                 /* ---------- 🔥 요일 제외 (신규) ---------- */
-                Text(
-                    text = "요일 제외",
-                    fontSize = 14.sp,
-                    color = Color(0xFF666666),
-                    fontWeight = FontWeight.Bold
-                )
+                Text("선택 요일 제외", fontSize = 14.sp, color = Color(0xFF666666))
                 Spacer(Modifier. height(8.dp))
 
-                // 🔥 요일 선택 그리드
+                // 🔥 요일 선택 그리드 (원형 버튼 스타일)
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(
-                            color = Color(0xFFF5F5F5),
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                        .padding(12.dp),
-                    verticalArrangement = Arrangement. spacedBy(8.dp)
+                    modifier = Modifier. fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     // 첫 번째 줄: 일~수
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         weekdays.take(4).forEach { (dayOfWeek, dayName) ->
-                            Row(
+                            Box(
                                 modifier = Modifier
                                     .weight(1f)
+                                    .aspectRatio(1f)
                                     .background(
-                                        color = if (excludedWeekdays.contains(dayOfWeek))
-                                            Color(0xFFE3F2FD)
-                                        else
-                                            Color. White,
-                                        shape = RoundedCornerShape(6.dp)
+                                        color = when {
+                                            dayOfWeek == 1 && excludedWeekdays.contains(dayOfWeek) -> Color(0xFFFF5252) // 일요일 선택
+                                            dayOfWeek == 7 && excludedWeekdays.contains(dayOfWeek) -> Color(0xFF2196F3) // 토요일 선택
+                                            excludedWeekdays.contains(dayOfWeek) -> Color(0xFF26A69A) // 평일 선택
+                                            else -> Color(0xFFE0E0E0) // 미선택
+                                        },
+                                        shape = CircleShape
                                     )
                                     .clickable {
                                         excludedWeekdays = if (excludedWeekdays.contains(dayOfWeek)) {
@@ -257,33 +268,17 @@ fun AddEditDialog(
                                         } else {
                                             excludedWeekdays + dayOfWeek
                                         }
-                                    }
-                                    . padding(8.dp),
-                                horizontalArrangement = Arrangement. Center,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Checkbox(
-                                    checked = excludedWeekdays.contains(dayOfWeek),
-                                    onCheckedChange = {
-                                        excludedWeekdays = if (it) {
-                                            excludedWeekdays + dayOfWeek
-                                        } else {
-                                            excludedWeekdays - dayOfWeek
-                                        }
                                     },
-                                    modifier = Modifier.size(20.dp)
-                                )
-                                Spacer(Modifier.width(4.dp))
+                                contentAlignment = Alignment. Center
+                            ) {
                                 Text(
                                     text = dayName,
-                                    fontSize = 13.sp,
-                                    fontWeight = if (excludedWeekdays.contains(dayOfWeek))
-                                        FontWeight.Bold
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (excludedWeekdays.contains(dayOfWeek))
+                                        Color.White
                                     else
-                                        FontWeight.Normal,
-                                    color = if (dayOfWeek == 1) Color(0xFFFF5252)  // 일요일 빨강
-                                    else if (dayOfWeek == 7) Color(0xFF2196F3)  // ���요일 파랑
-                                    else Color(0xFF333333)
+                                        Color(0xFF999999)
                                 )
                             }
                         }
@@ -292,52 +287,39 @@ fun AddEditDialog(
                     // 두 번째 줄: 목~토
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement. spacedBy(12.dp)
                     ) {
                         weekdays. drop(4).forEach { (dayOfWeek, dayName) ->
-                            Row(
+                            Box(
                                 modifier = Modifier
                                     .weight(1f)
+                                    .aspectRatio(1f)
                                     .background(
-                                        color = if (excludedWeekdays.contains(dayOfWeek))
-                                            Color(0xFFE3F2FD)
-                                        else
-                                            Color. White,
-                                        shape = RoundedCornerShape(6.dp)
+                                        color = when {
+                                            dayOfWeek == 1 && excludedWeekdays.contains(dayOfWeek) -> Color(0xFFFF5252) // 일요일 선택
+                                            dayOfWeek == 7 && excludedWeekdays.contains(dayOfWeek) -> Color(0xFF2196F3) // 토요일 선택
+                                            excludedWeekdays.contains(dayOfWeek) -> Color(0xFF26A69A) // 평일 선택
+                                            else -> Color(0xFFE0E0E0) // 미선택
+                                        },
+                                        shape = CircleShape
                                     )
                                     .clickable {
-                                        excludedWeekdays = if (excludedWeekdays.contains(dayOfWeek)) {
+                                        excludedWeekdays = if (excludedWeekdays. contains(dayOfWeek)) {
                                             excludedWeekdays - dayOfWeek
                                         } else {
                                             excludedWeekdays + dayOfWeek
-                                        }
-                                    }
-                                    .padding(8.dp),
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Checkbox(
-                                    checked = excludedWeekdays.contains(dayOfWeek),
-                                    onCheckedChange = {
-                                        excludedWeekdays = if (it) {
-                                            excludedWeekdays + dayOfWeek
-                                        } else {
-                                            excludedWeekdays - dayOfWeek
                                         }
                                     },
-                                    modifier = Modifier.size(20.dp)
-                                )
-                                Spacer(Modifier.width(4.dp))
+                                contentAlignment = Alignment. Center
+                            ) {
                                 Text(
                                     text = dayName,
-                                    fontSize = 13.sp,
-                                    fontWeight = if (excludedWeekdays.contains(dayOfWeek))
-                                        FontWeight.Bold
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (excludedWeekdays.contains(dayOfWeek))
+                                        Color.White
                                     else
-                                        FontWeight.Normal,
-                                    color = if (dayOfWeek == 1) Color(0xFFFF5252)  // 일요일 빨강
-                                    else if (dayOfWeek == 7) Color(0xFF2196F3)  // 토요일 파랑
-                                    else Color(0xFF333333)
+                                        Color(0xFF999999)
                                 )
                             }
                         }
@@ -360,35 +342,35 @@ fun AddEditDialog(
                     },
                     fontSize = 12.sp,
                     color = Color(0xFF999999),
-                    modifier = Modifier.padding(top = 8.dp, start = 8.dp)
+                    modifier = Modifier.padding(top = 8.dp, start = 4.dp)
                 )
 
-                Spacer(Modifier.height(16.dp))
-
-                // 🔥 전체 제외 안내
-                Text(
-                    text = when {
-                        excludePublicHolidays && excludeCustomDays && excludedWeekdays.isNotEmpty() ->
-                            "공휴일, 안식일, 선택한 요일을 제외하고 카운트합니다"
-                        excludePublicHolidays && excludeCustomDays ->
-                            "공휴일과 안식일을 제외하고 카운트합니다"
-                        excludePublicHolidays && excludedWeekdays.isNotEmpty() ->
-                            "공휴일과 선택한 요일을 제외하고 카운트합니다"
-                        excludeCustomDays && excludedWeekdays.isNotEmpty() ->
-                            "안식일과 선택한 요일을 제외하고 카운트합니다"
-                        excludePublicHolidays ->
-                            "공휴일을 제외하고 카운트합니다"
-                        excludeCustomDays ->
-                            "안식일을 제외하고 카운트합니다"
-                        excludedWeekdays.isNotEmpty() ->
-                            "선택한 요일을 제외하고 카운트합니다"
-                        else ->
-                            "모든 날짜를 포함합니다"
-                    },
-                    fontSize = 12.sp,
-                    color = Color(0xFF999999),
-                    modifier = Modifier.padding(top = 8.dp, start = 8.dp)
-                )
+//                Spacer(Modifier.height(16.dp))
+//
+//                // 🔥 전체 제외 안내
+//                Text(
+//                    text = when {
+//                        excludePublicHolidays && excludeCustomDays && excludedWeekdays.isNotEmpty() ->
+//                            "공휴일, 안식일, 선택한 요일을 제외하고 카운트합니다"
+//                        excludePublicHolidays && excludeCustomDays ->
+//                            "공휴일과 안식일을 제외하고 카운트합니다"
+//                        excludePublicHolidays && excludedWeekdays.isNotEmpty() ->
+//                            "공휴일과 선택한 요일을 제외하고 카운트합니다"
+//                        excludeCustomDays && excludedWeekdays.isNotEmpty() ->
+//                            "안식일과 선택한 요일을 제외하고 카운트합니다"
+//                        excludePublicHolidays ->
+//                            "공휴일을 제외하고 카운트합니다"
+//                        excludeCustomDays ->
+//                            "안식일을 제외하고 카운트합니다"
+//                        excludedWeekdays.isNotEmpty() ->
+//                            "선택한 요일을 제외하고 카운트합니다"
+//                        else ->
+//                            "모든 날짜를 포함합니다"
+//                    },
+//                    fontSize = 12.sp,
+//                    color = Color(0xFF999999),
+//                    modifier = Modifier.padding(top = 8.dp, start = 8.dp)
+//                )
 
                 Spacer(Modifier.height(16.dp))
 

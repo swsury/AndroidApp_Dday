@@ -12,14 +12,14 @@ import com.example.ddayapp.ui.theme.DdayAppTheme
 class DdayStyle2TransparentWidgetConfigActivity : ComponentActivity() {
 
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
-    
+
     companion object {
         private const val TAG = "Style2TransparentConfig"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setResult(Activity.RESULT_CANCELED)
 
         appWidgetId = intent?.extras?.getInt(

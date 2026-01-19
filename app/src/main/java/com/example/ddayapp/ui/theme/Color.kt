@@ -2,6 +2,8 @@ package com.example.ddayapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+// 색상 설정
+
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
@@ -10,7 +12,7 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
-// D-day 색상 팔레트
+// 디데이 색상 팔레트
 val DdayTeal = Color(0xFF24a19c)
 val DdayBlue = Color(0xFF218efd)
 val DdayRed = Color(0xFFff6b6b)
@@ -24,9 +26,7 @@ val DividerGray = Color(0xFFE0E5ED)
 val TextPrimary = Color(0xFF1B1C1F)
 val TextSecondary = Color(0xFF666666)
 
-/**
- * Hex 문자열을 Color로 변환
- */
+// Hex 문자열 > Color 변환
 fun String.toComposeColor(): Color {
     return try {
         Color(android.graphics.Color.parseColor(this))

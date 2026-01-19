@@ -24,47 +24,47 @@ import com.example.ddayapp.ui.components.*
 import com.example.ddayapp.ui.theme.BackgroundGray
 import com.example.ddayapp.viewmodel.DdayViewModel
 
+// 전체 화면 관리 코드
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DdayScreen(
-    viewModel: DdayViewModel = viewModel(),
-    initialDdayIdToEdit: Long?  = null
+    viewModel: DdayViewModel = viewModel(), //viewModel 주입
+    initialDdayIdToEdit: Long?  = null // 위젯에서 전달된 편집대상 ID
 ) {
-    val ddays by viewModel.ddays.collectAsState()
-    val settings by viewModel.settings.collectAsState()
-    val isLoadingHolidays by viewModel.isLoadingHolidays.collectAsState()
+    // viewModel 상태
+    val ddays by viewModel.ddays.collectAsState() //디데이 목록
+    val settings by viewModel.settings.collectAsState() // 안식일 설정
+    val isLoadingHolidays by viewModel.isLoadingHolidays.collectAsState() // 공휴일 설정
 
-    var showAddDialog by remember { mutableStateOf(false) }
-    var showSettingsDialog by remember { mutableStateOf(false) }
-    var editingDday by remember { mutableStateOf<DDay?>(null) }
+    // UI 상태
+    var showAddDialog by remember { mutableStateOf(false) } // 추가, 편집
+    var showSettingsDialog by remember { mutableStateOf(false) } // 설정
+    var editingDday by remember { mutableStateOf<DDay?>(null) } // 현재 편집 중인 디데이
+
+    // 스낵바
     var showSnackbar by remember { mutableStateOf(false) }
     var snackbarMessage by remember { mutableStateOf("") }
 
-    // 🔥 드래그 상태
+    // 드래그 상태
     var draggingGroupIndex by remember { mutableStateOf<Int?>(null) }
     var draggingCardId by remember { mutableStateOf<Long?>(null) }
     var dragOffset by remember { mutableStateOf(Offset.Zero) }
 
-    // 🔥 각 그룹의 펼침/접힘 상태 관리
+    // 그룹 별 상태
     var expandedGroups by remember { mutableStateOf<Set<String>>(emptySet()) }
-
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // 실시간 공휴일/안식일 데이터
-    val publicHolidays = remember(settings.publicHolidays) {
-        settings.publicHolidays.map { it.date }.toSet()
-    }
-    val customDays = remember(settings.customDays) {
-        settings.customDays.map { it.date }.toSet()
-    }
+    // 공휴일 / 안식일 데이터 변환
+    val publicHolidays = remember(settings.publicHolidays) { settings.publicHolidays.map { it.date }.toSet() }
+    val customDays = remember(settings.customDays) { settings.customDays.map { it.date }.toSet() }
 
-    // 🔥 labelTitle로 그룹화 및 정렬 가능한 그룹 순서
-    val groupedDdays = remember(ddays) {
-        ddays.groupBy { it.labelTitle }
-    }
+    // 그룹화
 
+    // 라벨명 기준 그룹화
+    val groupedDdays = remember(ddays) { ddays.groupBy { it.labelTitle } }
+    // 그룹 순서를 별도로 관리 (드래그 재정렬 기능)
     var groupOrder by remember { mutableStateOf(groupedDdays.keys.toList()) }
-
     // ddays가 변경되면 groupOrder 업데이트 (새 그룹 추가 시)
     LaunchedEffect(ddays) {
         val currentGroups = ddays.map { it.labelTitle }.distinct()
@@ -72,7 +72,7 @@ fun DdayScreen(
         groupOrder = groupOrder.filter { it in currentGroups } + newGroups
     }
 
-    // 🔥 위젯에서 전달된 D-day 편집 열기
+    // 위젯 선택 시 편집 화면 자동 실행 기능
     LaunchedEffect(initialDdayIdToEdit, ddays) {
         if (initialDdayIdToEdit != null && initialDdayIdToEdit != -1L) {
             val ddayToEdit = ddays.find { it.id == initialDdayIdToEdit }
@@ -91,8 +91,10 @@ fun DdayScreen(
         }
     }
 
+    // UI
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
+        // 상단 바
         topBar = {
             TopAppBar(
                 title = {
@@ -117,6 +119,7 @@ fun DdayScreen(
                 )
             )
         },
+        // 플로팅 추가 버튼
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
@@ -133,6 +136,7 @@ fun DdayScreen(
             }
         },
         containerColor = BackgroundGray
+        // 메인 컨텐츠 영역
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -140,7 +144,7 @@ fun DdayScreen(
                 .padding(paddingValues)
         ) {
             if (ddays.isEmpty()) {
-                // 빈 상태
+                // 디데이가 없는 경우
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -164,12 +168,13 @@ fun DdayScreen(
                     )
                 }
             } else {
-                // 🔥 그룹화된 D-day 리스트
+                // 디데이가 있는 경우
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
+                    // 라벨 단위 반복
                     itemsIndexed(
                         items = groupOrder,
                         key = { _, label -> "group_$label" }
@@ -178,7 +183,7 @@ fun DdayScreen(
                         val isExpanded = expandedGroups.contains(labelTitle)
                         val isDraggingGroup = draggingGroupIndex == groupIndex
 
-                        // 🔥 드래그 가능한 그룹 헤더
+                        // 라벨 헤더 (드래그 가능)
                         Box(
                             modifier = Modifier
                                 .graphicsLayer {
@@ -227,6 +232,7 @@ fun DdayScreen(
                                     )
                                 }
                         ) {
+                            // 라벨 별로 분류된 디데이 카드
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -287,7 +293,7 @@ fun DdayScreen(
                             }
                         }
 
-                        // 펼쳐진 경우에만 아이템 표시
+                        // 내부 디데이 목록 : 펼쳐진 경우에만 아이템 표시
                         if (isExpanded) {
                             ddaysInGroup.forEachIndexed { _, dday ->
                                 val isDraggingCard = draggingCardId == dday.id
@@ -314,7 +320,7 @@ fun DdayScreen(
                                                     change.consume()
                                                     dragOffset += Offset(0f, dragAmount.y)
 
-                                                    // 🔥 다른 그룹으로 이동 감지
+                                                    // 그룹 이동 감지
                                                     val cardHeight = 140.dp.toPx()
                                                     val currentOffset = dragOffset.y
 
@@ -354,6 +360,7 @@ fun DdayScreen(
                                             )
                                         }
                                 ) {
+                                    // 실제 디데이 카드
                                     DdayCard(
                                         dday = dday,
                                         publicHolidays = publicHolidays,
@@ -382,7 +389,6 @@ fun DdayScreen(
                         }
                     }
 
-                    // 하단 여백
                     item {
                         Spacer(modifier = Modifier.height(80.dp))
                     }
@@ -391,7 +397,7 @@ fun DdayScreen(
         }
     }
 
-    // AddEditDialog
+    // 추가, 편집 기능
     if (showAddDialog) {
         AddEditDialog(
             dday = editingDday,
@@ -416,7 +422,7 @@ fun DdayScreen(
         )
     }
 
-    // SettingsDialog
+    // 설정 기능
     if (showSettingsDialog) {
         SettingsDialog(
             settings = settings,

@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
+// 테마 설정
 private val LightColorScheme = lightColorScheme(
     primary = DdayTeal,
     secondary = DdayBlue,

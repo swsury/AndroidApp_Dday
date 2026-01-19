@@ -22,34 +22,42 @@ import com.example.ddayapp.data.Settings
 import com.example.ddayapp.utils.DateCalculator
 import java.util.*
 
+// 휴일 설정
+// 공휴일 : 자동, 안식일 : 사용자 추가 / 삭제
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsDialog(
-    settings: Settings,
-    isLoadingHolidays: Boolean,
-    onDismiss: () -> Unit,
-    onSave: (Settings) -> Unit,
-    onAddCustomDay: (Holiday) -> Unit,
-    onRemoveCustomDay: (String) -> Unit
+    settings: Settings, // 기존 설정 값
+    isLoadingHolidays: Boolean, // 공휴일 로딩 상태
+    onDismiss: () -> Unit, // 다이얼로그 닫기
+    onSave: (Settings) -> Unit, // 저장
+    onAddCustomDay: (Holiday) -> Unit, // 안식일 추가
+    onRemoveCustomDay: (String) -> Unit // 안식일 삭제
 ) {
-    var publicHolidays by remember { mutableStateOf<List<Holiday>>(settings.publicHolidays) }  // 🔥 타입 명시
-    var customDays by remember { mutableStateOf<List<Holiday>>(settings.customDays) }  // 🔥 타입 명시
-    var sabbathDay by remember { mutableStateOf<String?>(settings.sabbathDay) }  // 🔥 타입 명시
-    var newCustomDate by remember { mutableStateOf("") }
-    var newCustomName by remember { mutableStateOf("") }
-    var showDatePicker by remember { mutableStateOf(false) }
 
-    // 🔥 각 스크롤 영역마다 별도의 ScrollState
-    val mainScrollState = rememberScrollState()
-    val publicHolidaysScrollState = rememberScrollState()
-    val customDaysScrollState = rememberScrollState()
+    // 상태
+    var publicHolidays by remember { mutableStateOf<List<Holiday>>(settings.publicHolidays) }  // 공휴일 목록
+    var customDays by remember { mutableStateOf<List<Holiday>>(settings.customDays) }  // 안식일 목록
+    var sabbathDay by remember { mutableStateOf<String?>(settings.sabbathDay) }  // 휴무 요일
+    // 안식일 추가 값
+    var newCustomDate by remember { mutableStateOf("") } // 안식일 날짜
+    var newCustomName by remember { mutableStateOf("") } // 안식일 이름
+    var showDatePicker by remember { mutableStateOf(false) } // DatePicker 표시 여부
 
+    // 스크롤 상태
+    val mainScrollState = rememberScrollState() // 메인
+    val publicHolidaysScrollState = rememberScrollState() // 공휴일 목록
+    val customDaysScrollState = rememberScrollState() // 안식일 목록
+
+    // 설정 값이 변경될 경우 상태 자동 동기화 (자동 갱신)
     LaunchedEffect(settings) {
         publicHolidays = settings.publicHolidays
         customDays = settings.customDays
         sabbathDay = settings.sabbathDay
     }
 
+    // UI
     Dialog(onDismissRequest = onDismiss) {
         Card(
             modifier = Modifier
@@ -89,12 +97,14 @@ fun SettingsDialog(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
+                // 본문
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .verticalScroll(mainScrollState)  // 🔥 별도의 ScrollState 사용
+                        .verticalScroll(mainScrollState)
                 ) {
-                    // 🔥 공휴일 섹션 (자동)
+                    // 공휴일
+
                     Text(
                         text = "공휴일 (자동)",
                         fontSize = 16.sp,
@@ -112,6 +122,8 @@ fun SettingsDialog(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // 공휴일 목록
+
+                    // 공휴일이 없을 때
                     if (publicHolidays.isEmpty()) {
                         Box(
                             modifier = Modifier
@@ -134,7 +146,7 @@ fun SettingsDialog(
                             }
                         }
                     } else {
-                        // 총 개수 표시
+                        // 공휴일 개수 표시
                         Text(
                             text = "등록된 공휴일 수 :  총 ${publicHolidays.size}개",
                             fontSize = 12.sp,
@@ -142,7 +154,7 @@ fun SettingsDialog(
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(top = 4.dp, bottom = 8.dp)
                         )
-                        // 🔥 스크롤 가능한 공휴일 목록
+                        // 공휴일 리스트
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -196,7 +208,7 @@ fun SettingsDialog(
 
                     Spacer(modifier = Modifier.height(32.dp))
 
-                    // 🔥 안식일 섹션 (수동)
+                    // 안식일
                     Text(
                         text = "안식일 (수동 추가)",
                         fontSize = 16.sp,
@@ -211,7 +223,7 @@ fun SettingsDialog(
                         modifier = Modifier.padding(top = 4.dp, bottom = 12.dp)
                     )
 
-                    // 날짜 추가
+                    // 안식일 추가
                     Column(
                         modifier = Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -232,7 +244,6 @@ fun SettingsDialog(
                                 disabledBorderColor = Color.Gray
                             )
                         )
-
                         if (showDatePicker) {
                             val datePickerState = rememberDatePickerState()
                             DatePickerDialog(
@@ -319,7 +330,7 @@ fun SettingsDialog(
                             )
                         }
                     } else {
-                        // 총 개수 표시
+                        // 안식일 개수 표시
                         Text(
                             text = "등록된 안식일 수 : 총 ${customDays.size}개",
                             fontSize = 12.sp,
@@ -339,13 +350,13 @@ fun SettingsDialog(
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .verticalScroll(customDaysScrollState)  // 🔥 별도의 ScrollState
+                                    .verticalScroll(customDaysScrollState)
                                     .padding(12.dp),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 customDays
-                                    .filter { holiday -> holiday.date.isNotBlank() }  // 🔥 명시적 파라미터
-                                    .forEach { holiday ->  // 🔥 명시적 파라미터
+                                    .filter { holiday -> holiday.date.isNotBlank() }
+                                    .forEach { holiday ->
                                         val displayDate =
                                             DateCalculator.formatDisplayDate(holiday.date)
 

@@ -19,6 +19,8 @@ class DdayStyle1WidgetProvider : AppWidgetProvider() {
     companion object {
         private const val TAG = "Style1Widget"
 
+        // 개별 위젯 업데이트
+        // @param appWidgetId 엡데이트할 위젯 ID
         fun updateAppWidget(
             context: Context,
             appWidgetManager: AppWidgetManager,
@@ -26,20 +28,28 @@ class DdayStyle1WidgetProvider : AppWidgetProvider() {
         ) {
             try {
                 val prefsHelper = PrefsHelper(context)
+
+                // 위젯별 설정 저장소
                 val widgetPrefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
 
+                // 이 위젯에 연결된 D-Day ID 가져오기
                 val ddayId = widgetPrefs.getLong("widget_style1_${appWidgetId}_dday_id", -1L)
+
+                // 위젯 UI 객체 생성
                 val views = RemoteViews(context.packageName, R.layout.widget_dday_style1)
 
                 if (ddayId != -1L) {
+                    // 위젯 UI 객체 생성
                     val ddays = prefsHelper.loadDDays()
                     val dday = ddays.find { it.id == ddayId }
                     val settings = prefsHelper.loadSettings()
 
                     if (dday != null) {
+                        // 공휴일 / 사용자 지정 날짜 Set 변환
                         val publicHolidays = settings.publicHolidays.map { it.date }.toSet()
                         val customDays = settings.customDays.map { it.date }.toSet()
 
+                        // D-Day 계산
                         val ddayText = DateCalculator.calculateDDay(
                             targetDate = dday.date,
                             excludePublicHolidays = dday.excludePublicHolidays,
@@ -49,20 +59,22 @@ class DdayStyle1WidgetProvider : AppWidgetProvider() {
                             customDays = customDays
                         )
 
+                        // UI 데이터 바인딩
                         views.setTextViewText(R.id.widget_label, dday.labelTitle)
                         views.setTextViewText(R.id.widget_title, dday.title)
                         views.setTextViewText(R.id.widget_dday, ddayText)
                         views.setTextViewText(R.id.widget_date, dday.date)
 
-                        // 🔥 배경색 설정
+                        // 배경색 설정 : D-day Card 색상
                         try {
                             val color = Color.parseColor(dday.color)
                             views.setInt(R.id.widget_background, "setBackgroundColor", color)
                         } catch (e: Exception) {
+                            // 색상 파싱 실패 시 기본 색상 유지
                             views.setInt(R.id.widget_background, "setBackgroundColor", Color.parseColor("#24a19c"))
                         }
 
-                        // 🔥 위젯 클릭 시 해당 D-day 편집 화면 열기
+                        // 위젯 클릭 시 해당 D-day 편집 화면 열기
                         val intent = Intent(context, MainActivity::class.java).apply {
                             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                             putExtra("dday_id", dday.id)
@@ -70,14 +82,14 @@ class DdayStyle1WidgetProvider : AppWidgetProvider() {
                         }
                         val pendingIntent = PendingIntent.getActivity(
                             context,
-                            appWidgetId, // 고유한 requestCode 사용
+                            appWidgetId, // 위젯별 고유 requestCode
                             intent,
                             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                         )
                         views.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
 
                     } else {
-                        // D-day가 삭제된 경우
+                        // D-Day 데이터가 없을 경우 기본 UI
                         setDefaultContent(views)
                         setDefaultClickIntent(context, views, appWidgetId)
                     }
@@ -87,6 +99,7 @@ class DdayStyle1WidgetProvider : AppWidgetProvider() {
                     setDefaultClickIntent(context, views, appWidgetId)
                 }
 
+                // 위젯 업데이트 반영
                 appWidgetManager.updateAppWidget(appWidgetId, views)
 
             } catch (e: Exception) {
@@ -94,17 +107,18 @@ class DdayStyle1WidgetProvider : AppWidgetProvider() {
             }
         }
 
+        // 기본 UI 설정 (초기 상태)
         private fun setDefaultContent(views: RemoteViews) {
             views.setTextViewText(R.id.widget_label, "D-day")
             views.setTextViewText(R.id.widget_title, "위젯 설정")
             views.setTextViewText(R.id.widget_dday, "")
             views.setTextViewText(R.id.widget_date, "터치하여 설정")
 
-            // 기본 배경색
+            // 기본 배경 색상
             views.setInt(R.id.widget_background, "setBackgroundColor", Color.parseColor("#24a19c"))
         }
 
-        // 🔥 기본 클릭 시 메인 화면만 열기
+        // 기본 클릭 이벤트 (앱 메인 화면 이동)
         private fun setDefaultClickIntent(context: Context, views: RemoteViews, appWidgetId: Int) {
             val intent = Intent(context, MainActivity:: class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -118,6 +132,7 @@ class DdayStyle1WidgetProvider : AppWidgetProvider() {
             views.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
         }
 
+        // 모든 위젯 갱신
         fun updateAllWidgets(context: Context) {
             try {
                 val appWidgetManager = AppWidgetManager.getInstance(context)
@@ -131,10 +146,12 @@ class DdayStyle1WidgetProvider : AppWidgetProvider() {
         }
     }
 
+    // 시스템이 위젯 업데이트 요청 시 호출
     override fun onUpdate(context: Context, appWidgetManager:  AppWidgetManager, appWidgetIds: IntArray) {
         appWidgetIds.forEach { updateAppWidget(context, appWidgetManager, it) }
     }
 
+    // 위젯 삭제 시 호출 (데이터 정리)
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         val widgetPrefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
         val editor = widgetPrefs.edit()

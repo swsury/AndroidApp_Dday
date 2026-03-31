@@ -4,16 +4,15 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ddayapp.utils.HolidayApi
-import com.example.ddayapp.data.DDay
-import com.example.ddayapp.data.Holiday
-import com.example.ddayapp.data.PrefsHelper
-import com.example.ddayapp.data.Settings
+import com.example.ddayapp.data.*
 import com.example.ddayapp.widget.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
+// D-Day 앱의 핵심 ViewModel
+// 역할 : D-day 목록 관리, 설정 관리, 공휴일 API 연동, 위젯 동기화
 class DdayViewModel(application: Application) : AndroidViewModel(application) {
 
     private val prefsHelper = PrefsHelper(application)
@@ -33,17 +32,14 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         autoLoadCurrentYearHolidays()
     }
 
-    /**
-     * 데이터 로드
-     */
+    // 초기 데이터 로드
     private fun loadData() {
         _ddays.value = prefsHelper.loadDDays()
         _settings.value = prefsHelper.loadSettings()
         checkAndUpdateYearHolidays()
     }
 
-    //위젯 자동업데이트
-
+    //위젯 자동 업데이트
     private fun updateAllWidgets() {
         DdayStyle1WidgetProvider.updateAllWidgets(context)
         DdayStyle2WidgetProvider.updateAllWidgets(context)
@@ -53,12 +49,10 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         DdayStyle3TransparentWidgetProvider.updateAllWidgets(context)
     }
 
-    /**
-     * D-day 추가
-     */
+    // D-day 추가
     fun addDDay(dday: DDay) {
         val currentList = _ddays.value
-        // 새 아이템은 맨 뒤에 추가
+        // 새 D-day는 맨 뒤에 추가되도록 order 설정
         val newOrder = (currentList.maxOfOrNull { it.order } ?: -1) + 1
         val newDDay = dday.copy(order = newOrder)
 
@@ -69,9 +63,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         updateAllWidgets()
     }
 
-    /**
-     * D-day 수정
-     */
+    // D-day 수정
     fun updateDDay(dday: DDay) {
         _ddays.value = _ddays.value.map { item ->
             if (item.id == dday.id) dday else item
@@ -82,9 +74,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         updateAllWidgets()
     }
 
-    /**
-     * D-day 삭제
-     */
+    // D-day 삭제
     fun deleteDDay(id: Long) {
         _ddays.value = _ddays.value.filter { it.id != id }
         prefsHelper.saveDDays(_ddays.value)
@@ -93,9 +83,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         updateAllWidgets()
     }
 
-    /**
-     * D-day 순서 변경
-     */
+    // D-day 순서 변경 (드래그 앤 드롭)
     fun reorderDDays(fromIndex: Int, toIndex: Int) {
         val currentList = _ddays.value.toMutableList()
 
@@ -120,9 +108,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         updateAllWidgets()
     }
 
-    /**
-     * D-day를 다른 그룹으로 이동
-     */
+    // D-day 그룹 이동
     fun moveDdayToGroup(ddayId: Long, targetLabelTitle: String) {
         _ddays.value = _ddays.value.map { dday ->
             if (dday.id == ddayId) {
@@ -135,9 +121,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         updateAllWidgets()
     }
 
-    /**
-     * 설정 업데이트
-     */
+    // D-day 설정 업데이트
     fun updateSettings(settings: Settings) {
         _settings.value = settings
         prefsHelper.saveSettings(settings)
@@ -146,9 +130,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         updateAllWidgets()
     }
 
-    /**
-     * 안식일 추가
-     */
+    // 안식일 (사용자 지정 휴식일) 추가
     fun addCustomDay(holiday: Holiday) {
         val currentSettings = _settings.value
         val updatedCustomDays = (currentSettings.customDays + holiday)
@@ -159,9 +141,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         updateSettings(newSettings)
     }
 
-    /**
-     * 안식일 삭제
-     */
+    // 안식일 (사용자 지정 휴식일) 삭제
     fun removeCustomDay(date: String) {
         val currentSettings = _settings.value
         val updatedCustomDays = currentSettings.customDays.filter { it.date != date }
@@ -170,9 +150,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         updateSettings(newSettings)
     }
 
-    /**
-     * 현재 연도의 공휴일 자동 로드
-     */
+    // 공휴일 자동 로드 (현재 연도)
     private fun autoLoadCurrentYearHolidays() {
         val currentYear = Calendar.getInstance().get(Calendar.YEAR).toString()
         val currentSettings = _settings.value
@@ -186,9 +164,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    /**
-     * 시스템 연도 변경 체크 및 공휴일 업데이트
-     */
+    // 공휴일 자동 업데이트 (시스템 연도 변경 시)
     private fun checkAndUpdateYearHolidays() {
         val currentYear = Calendar.getInstance().get(Calendar.YEAR).toString()
         val currentSettings = _settings.value
@@ -202,9 +178,7 @@ class DdayViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    /**
-     * API에서 공휴일 가져오기
-     */
+    // 공휴일 API에서 정보 가져오기
     fun fetchPublicHolidaysFromApi(year: String, onComplete: ((Boolean, String) -> Unit)? = null) {
         viewModelScope.launch {
             _isLoadingHolidays.value = true

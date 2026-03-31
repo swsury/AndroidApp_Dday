@@ -1,11 +1,15 @@
 package com.example.ddayapp.widget
 
+// 위젯 클릭 이벤트 처리용
 import android.app.PendingIntent
+// 위젯 관리 클래스
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+// 위젯 UI 구성 클래스 (XML 기반)
 import android.widget.RemoteViews
 import com.example.ddayapp.MainActivity
 import com.example.ddayapp.R
